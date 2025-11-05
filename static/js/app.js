@@ -553,7 +553,7 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope) {
 
 app.controller("recetasCtrl", function ($scope, $http) {
     
-    function buscarRentas() {
+    function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML)
         })
@@ -669,6 +669,7 @@ app.controller("recetasCtrl", function ($scope, $http) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
