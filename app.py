@@ -187,54 +187,54 @@ def recetasTbody():
     return render_template("RecetasTbody.html", recetas=registros)
 
 # GUARDAR
-@app.route("/recetas", methods=["POST"])
-@login
-def guardarReceta():
-    if not con.is_connected():
-        con.reconnect()
+# @app.route("/recetas", methods=["POST"])
+# @login
+# def guardarReceta():
+#     if not con.is_connected():
+#         con.reconnect()
 
-    IdReceta         = request.form.get("IdReceta")
-    Nombre           = request.form.get("Nombre")
-    Descripcion      = request.form.get("Descripcion")
-    Ingredientes     = request.form.get("Ingredientes")
-    Utensilios       = request.form.get("Utensilios")
-    Instrucciones    = request.form.get("Instrucciones")
-    Nutrientes       = request.form.get("Nutrientes")
-    Categorias       = request.form.get("Categorias")
+#     IdReceta         = request.form.get("IdReceta")
+#     Nombre           = request.form.get("Nombre")
+#     Descripcion      = request.form.get("Descripcion")
+#     Ingredientes     = request.form.get("Ingredientes")
+#     Utensilios       = request.form.get("Utensilios")
+#     Instrucciones    = request.form.get("Instrucciones")
+#     Nutrientes       = request.form.get("Nutrientes")
+#     Categorias       = request.form.get("Categorias")
 
-    # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
+#     # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
     
-    cursor = con.cursor()
+#     cursor = con.cursor()
 
-    if IdReceta:
-        sql = """
-        UPDATE Recetas
+#     if IdReceta:
+#         sql = """
+#         UPDATE Recetas
 
-        SET Nombre          = %s,
-        Descripcion         = %s,
-        Ingredientes        = %s,
-        Utensilios          = %s,
-        Instricciones       = %s,
-        Nutrientes          = %s,
-        Categorias          = %s
+#         SET Nombre          = %s,
+#         Descripcion         = %s,
+#         Ingredientes        = %s,
+#         Utensilios          = %s,
+#         Instricciones       = %s,
+#         Nutrientes          = %s,
+#         Categorias          = %s
 
-        WHERE IdReceta = %s
-        """
-        val = (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
-    else:
-        sql = """
-        INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
-                    VALUES (   %s,        %s,        %s,            %s,            %s)
-        """
-        val =               (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
+#         WHERE IdReceta = %s
+#         """
+#         val = (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
+#     else:
+#         sql = """
+#         INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
+#                     VALUES (   %s,        %s,        %s,            %s,            %s)
+#         """
+#         val =               (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
     
-    cursor.execute(sql, val)
-    con.commit()
-    con.close()
+#     cursor.execute(sql, val)
+#     con.commit()
+#     con.close()
 
-    pusherRecetas()
+#     pusherRecetas()
     
-    return make_response(jsonify({}))
+#     return make_response(jsonify({}))
 
 
 # ELIMINAR
@@ -262,28 +262,28 @@ def eliminarReceta():
     return make_response(jsonify({}))
 
 
-# EDITAR
-@app.route("/recetas/<int:id>")
-@login
-def editarReceta(id):
-    if not con.is_connected():
-        con.reconnect()
+# # EDITAR
+# @app.route("/recetas/<int:id>")
+# @login
+# def editarReceta(id):
+#     if not con.is_connected():
+#         con.reconnect()
 
-    cursor = con.cursor(dictionary=True)
-    sql    = """
-    SELECT IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias
+#     cursor = con.cursor(dictionary=True)
+#     sql    = """
+#     SELECT IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias
 
-    FROM Recetas
+#     FROM Recetas
 
-    WHERE IdRecetas = %s
-    """
-    val    = (id,)
+#     WHERE IdRecetas = %s
+#     """
+#     val    = (id,)
 
-    cursor.execute(sql, val)
-    registros = cursor.fetchall()
-    con.close()
+#     cursor.execute(sql, val)
+#     registros = cursor.fetchall()
+#     con.close()
 
-    return make_response(jsonify(registros))
+#     return make_response(jsonify(registros))
 
 
 # BUSQUEDA
@@ -336,4 +336,5 @@ def buscarReceta():
         con.close()
 
     return make_response(jsonify(registros))
+
 
