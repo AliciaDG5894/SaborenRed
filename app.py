@@ -338,6 +338,41 @@ def buscarReceta():
     return make_response(jsonify(registros))
 
 
+@app.route("/recetas/categorias", methods=["GET"])
+@login
+def buscarCategorias():
+    if not con.is_connected():
+        con.reconnect()
 
+    args     = request.args
+    categoria = args["categoria"]
+    
+# EN WHERE BUSQUEDA PUSE SOLO TRES POR EL "VAL" NO SE SI SE LIMITE (si se limita)
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    SELECT  Nombre
+           
+    FROM Recetas
+    
+    WHERE Categorias = %s
 
+    ORDER BY Nombre ASC
+    LIMIT 10 OFFSET 0
+    """
+    val    = (categoria)
 
+# CHECAR FECHA/ listo
+
+    try:
+        cursor.execute(sql, val)
+        registros = cursor.fetchall()
+        
+
+    except mysql.connector.errors.ProgrammingError as error:
+        print(f"Ocurrió un error de programación en MySQL: {error}")
+        registros = []
+
+    finally:
+        con.close()
+
+    return make_response(jsonify(registros))
