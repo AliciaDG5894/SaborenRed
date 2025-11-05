@@ -123,7 +123,7 @@ app.run(["$rootScope", "$location", "$timeout", "SessionService", function($root
     $rootScope.incompleteRequest = false
     $rootScope.completeRequest   = false
     $rootScope.login             = localStorage.getItem("login")
-    const defaultRouteAuth       = "recetas"
+    const defaultRouteAuth       = "#recetas"
     let timesChangesSuccessRoute = 0
 
 
@@ -749,6 +749,7 @@ app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
