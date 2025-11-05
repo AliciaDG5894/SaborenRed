@@ -570,105 +570,12 @@ app.controller("recetasCtrl", function ($scope, $http) {
         buscarRecetas()
     });
 
-    $(document).on("click", "#btnBuscarRecetas", function() {
-        const busqueda = $("#txtBuscarRecetas").val().trim();
-
-        if(busqueda === "") {
-            buscarRecetas();
-            return;
-        }
-
-        $.get("/recetas/buscar", { busqueda: busqueda }, function(registros) {
-            let trsHTML = "";
-            registros.forEach(renta => {
-                trsHTML += `
-                    <tr>
-                        <td>{{ receta.IdReceta }}</td>
-                        <td>{{ receta.Nombre }}</td>
-                        <td>{{ receta.Descripcion }}</td>
-                        <td>{{ receta.Ingredientes }}</td>
-                        <td>{{ receta.Utensilios }}</td>
-                        <td>{{ receta.Instrucciones }}</td>
-                        <td>{{ receta.Nutrientes }}</td>
-                        <td>{{ receta.Categorias }}</td>
-                        <td><button class="btn btn-sm btn-danger btn-eliminar" data-id="{{ receta.IdReceta}}">Eliminar</button>
-                        <!-- <button class="btn btn-sm btn-warning btn-editar" data-id="{{ renta.idRenta }}" data-cliente-id="{{ renta.idCliente }}" data-traje-id="{{ renta.idTraje }}" data-descripcion="{{ renta.descripcion }}" data-fechahorainicio="{{ renta.fechaHoraInicioISO }}" data-fechahorafin="{{ renta.fechaHoraFinISO }}">Editar</button></td> -->
-                    </tr>
-                `;
-            });
-            $("#recetasTbody").html(trsHTML);
-        }).fail(function(xhr){
-            console.error("Error al buscar receta:", xhr.responseText);
-        });
-    });
-
-    // // Permitir Enter en input
-    // $("#txtBuscarRenta").on("keypress", function(e) {
-    //     if(e.which === 13) {
-    //         $("#btnBuscarRenta").click();
-    //     }
-    // });
-
-    // $(document).on("submit", "#frmRenta", function (event) {
-    //     event.preventDefault();
-
-    //     const idRenta = $("#idRenta").val(); 
-
-    //     $.post("/renta", {
-    //         idRenta: $("#idRenta").val(),
-    //         cliente: $("#txtIdCliente").val(),
-    //         traje: $("#txtIdTraje").val(),
-    //         descripcion: $("#txtDescripcion").val(),
-    //         fechaHoraInicio: $("#txtFechaInicio").val(),
-    //         fechaHoraFin: $("#txttxtFechaFin").val()
-
-    //     }, function(response){
-    //         console.log("Renta guardada o actualizada correctamente");
-    //         $("#frmRenta")[0].reset();
-    //         $("#idRenta").val("");
-    //         buscarRentas(); 
-    //     }).fail(function(xhr){
-    //         console.error("Error al guardar/actualizar renta:", xhr.responseText);
-    //     });
-
-    // });
-
-    $(document).on("click", "#tbodyRentas .btn-eliminar", function(){
-        const id = $(this).data("id");
-        if(confirm("¿Deseas eliminar esta renta?")) {
-            $.post("/renta/eliminar", {id: id}, function(response){
-                console.log("Renta eliminado correctamente");
-                buscarRentas(); 
-            }).fail(function(xhr){
-                console.error("Error al eliminar renta:", xhr.responseText);
-            });
-        }
-    });
-        
-    // $(document).on("click", "#tbodyRentas .btn-editar", function() {
-    //     const id = $(this).data("id");
-    //     const clienteId = $(this).data("clienteId");
-    //     const trajeId = $(this).data("trajeId");
-    //     const descripcion = $(this).data("descripcion");
-    //     const fechaHoraInicio = $(this).data("fechahorainicio");
-    //     const fechaHoraFin = $(this).data("fechahorafin");
-
-    //     $("#idRenta").val(id);
-    //     $("#txtIdCliente").val(clienteId); 
-    //     $("#txtIdTraje").val(trajeId); 
-    //     $("#txtDescripcion").val(descripcion);
-    //     $("#txtFechaInicio").val(fechaHoraInicio);
-    //     $("#txttxtFechaFin").val(fechaHoraFin);
-
-    //     const btnGuardar = $("#btnGuardar");
-    //     btnGuardar.text("Actualizar");
-    //     btnGuardar.removeClass("btn-primary").addClass("btn-success");
-    // });
 });
 
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
