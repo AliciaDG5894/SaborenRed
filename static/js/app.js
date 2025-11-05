@@ -125,7 +125,7 @@ app.factory("CategoriaFactory", function () {
     }
 })
 
-app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
+app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, $timeout) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
     $rootScope.sendingRequest    = false
@@ -584,20 +584,6 @@ app.run(["$rootScope", "$location", "$timeout", "SessionService", function($root
             activeMenuOption(`#${path}`)
         }
     })
-    // Después de obtener preferencias desde localStorage:
-    const session = SessionService.getInstance();
-    if ($rootScope.login && $rootScope.preferencias) {
-        session.setUser($rootScope.preferencias);
-    }
-
-    // Dentro de cerrarSesion()
-    function cerrarSesion() {
-        localStorage.removeItem("JWT");
-        session.clearUser(); // 🔹 Limpia también el Singleton
-        $rootScope.login = null;
-        $rootScope.preferencias = {};
-        $rootScope.redireccionar(null, {});
-    }
 }])
 
 app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService) {
@@ -768,6 +754,7 @@ app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
