@@ -1,0 +1,68 @@
+<form id="frmRenta" method="post">
+    <input type="hidden" id="idRenta" name="idRenta">
+
+    <div class="mb-1">
+        <label>Clientes</label>
+        <select class="form-control" id="txtIdCliente" name="txtIdCliente">
+            <option value="" disabled selected>Seleccione una opción</option>
+            {% for cliente in clientes %}
+                <option value="{{ cliente.idCliente }}">{{ cliente.nombreCliente }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="mb-1">
+        <label>Traje</label>
+        <select class="form-control" id="txtIdTraje" name="txtIdTraje">
+            <option value="" disabled selected>Seleccione una opción</option>
+            {% for traje in trajes %}
+                <option value="{{ traje.idTraje }}">{{ traje.nombreTraje }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-1">
+        <label>Descripcion</label>
+        <input type="text" class="form-control" id="txtDescripcion" name="txtDescripcion">
+    </div>
+    <div class="mb-1">
+        <label>Fecha inicio</label>
+        <input type="datetime-local" class="form-control" id="txtFechaInicio" name="txtFechaInicio">
+    </div>
+        <div class="mb-1">
+        <label>Fecha fin</label>
+        <input type="datetime-local" class="form-control" id="txttxtFechaFin" name="txttxtFechaFin">
+    </div>
+    <div class="mb-1 text-end">
+        <button class="btn btn-primary">Guardar</button>
+    </div>
+</form>
+<div class="mb-3 input-group">
+    <input type="text" class="form-control" id="txtBuscarRenta" placeholder="Buscar renta de trajes">
+    <button class="btn btn-secondary" id="btnBuscarRenta" type="button">Buscar</button>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-sm">
+        <thead class="table-active">
+            <tr>
+                <th>Id</th>
+                <th>Cliente</th>
+                <th>Traje</th>
+                <th>Descripcion</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="tbodyRentas"></tbody>
+    </table>
+</div>
+
+
+
+
+
+
+
+

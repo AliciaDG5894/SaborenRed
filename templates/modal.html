@@ -1,0 +1,18 @@
+<div class="table-responsive">
+    <table class="table table-sm">
+        <thead class="table-active">
+            <tr>
+                <th>Nombre</th>
+                <th>Existencias</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for productoIngrediente in productosIngredientes %}
+            <tr>
+                <td>{{ productoIngrediente.Nombre_Ingrediente }}</td>
+                <td>{{ productoIngrediente.Existencias }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
