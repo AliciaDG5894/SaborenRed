@@ -610,7 +610,7 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
     });
 });
 
-app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
+app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory) {
     const session = SessionService.getInstance();
 
     if (session.isLoggedIn()) {
@@ -749,6 +749,7 @@ app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
