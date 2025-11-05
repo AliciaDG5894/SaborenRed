@@ -66,6 +66,27 @@ app.config(function ($routeProvider, $locationProvider) {
         redirectTo: "/"
     })
 })
+
+app.factory("CategoriaFactory", function () {
+    function Categoria(titulo, recetas){
+        this.titulo  = titulo
+        this.recetas  = recetas
+    }
+
+    Categoria.prototype.getInfo = function () {
+        return {
+            titulo: this.titulo,
+            recetas: this.recetas
+        }
+    }
+
+    return {
+        create: function (titulo, recetas) {
+            return new Categoria(titulo, recetas)
+        }
+    }
+})
+
 app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, $timeout) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
@@ -561,6 +582,16 @@ app.controller("recetasCtrl", function ($scope, $http) {
 
     buscarRecetas();
 
+    // factory
+    $.get("recetas/categorias", {
+        categoria: "Rapida"
+    }, function (rapida) {
+        const categoriaRapida = CategoriaFactory.create("Rapida", rapida)
+        console.log("Comida rapida FACTORY", categoriaRapida.getInfo())
+        $scope.categoriaRapida = categoriaRapida
+
+    })
+
     Pusher.logToConsole = true;
     var pusher = new Pusher('b51b00ad61c8006b2e6f', {
       cluster: 'us2'
@@ -671,6 +702,7 @@ app.controller("recetasCtrl", function ($scope, $http) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
