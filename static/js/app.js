@@ -572,7 +572,7 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope) {
     })
 })
 
-app.controller("recetasCtrl", function ($scope, $http) {
+app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
     
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
@@ -702,6 +702,7 @@ app.controller("recetasCtrl", function ($scope, $http) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
