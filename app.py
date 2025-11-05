@@ -172,7 +172,7 @@ def recetasTbody():
         Utensilios,
         Instrucciones,
         Nutrientes,
-        Categorias,
+        Categorias
 
     FROM Recetas
 
@@ -307,13 +307,13 @@ def buscarReceta():
             Utensilios,
             Instrucciones,
             Nutrientes,
-            Categorias,
+            Categorias
            
     FROM Recetas
     
     WHERE Nombre LIKE %s
        OR Ingredientes LIKE %s
-       OR Nutrientes %s
+       OR Nutrientes LIKE %s
        OR Categorias LIKE %s
 
     ORDER BY IdReceta DESC
@@ -336,6 +336,7 @@ def buscarReceta():
         con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
