@@ -570,8 +570,8 @@ app.controller("recetasCtrl", function ($scope, $http) {
         buscarRecetas()
     });
 
-    $(document).on("click", "#btnBuscarRecetas", function() {
-        const busqueda = $("#txtBuscarRecetas").val().trim();
+    $(document).on("click", "#btnBuscarReceta", function() {
+        const busqueda = $("#txtBuscarReceta").val().trim();
 
         if(busqueda === "") {
             buscarRecetas();
@@ -671,6 +671,7 @@ app.controller("recetasCtrl", function ($scope, $http) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
