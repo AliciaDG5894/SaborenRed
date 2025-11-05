@@ -638,7 +638,7 @@ app.controller("recetasCtrl", function ($scope, $http) {
     $(document).on("click", "#recetasTbody .btn-eliminar", function(){
         const id = $(this).data("id");
         if(confirm("¿Deseas eliminar esta receta?")) {
-            $.post("/receta/eliminar", {id: id}, function(response){
+            $.post("/recetas/eliminar", {id: id}, function(response){
                 console.log("Receta eliminado correctamente");
                 buscarRecetas(); 
             }).fail(function(xhr){
@@ -671,6 +671,7 @@ app.controller("recetasCtrl", function ($scope, $http) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
