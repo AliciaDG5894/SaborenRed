@@ -87,7 +87,7 @@ app.factory("CategoriaFactory", function () {
     }
 })
 
-app.run(["$rootScope", "$location", "$timeout",  function($rootScope, $location, $timeout) {
+app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, $timeout) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
     $rootScope.sendingRequest    = false
@@ -117,6 +117,7 @@ app.run(["$rootScope", "$location", "$timeout",  function($rootScope, $location,
         preferencias = {}
     }
     $rootScope.preferencias = preferencias
+
 
     $rootScope.$on("$routeChangeSuccess", function (event, current, previous) {
         $rootScope.spinnerGrow = false
@@ -547,29 +548,29 @@ app.run(["$rootScope", "$location", "$timeout",  function($rootScope, $location,
     })
 }])
 
-app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService) {
+app.controller("loginCtrl", function ($scope, $http, $rootScope) {
     $("#frmInicioSesion").submit(function (event) {
-        event.preventDefault();
+        event.preventDefault()
 
-        pop(".div-inicio-sesion", 'ℹ️Iniciando sesi&oacute;n, espere un momento...', "primary");
+        pop(".div-inicio-sesion", 'ℹ️Iniciando sesi&oacute;n, espere un momento...', "primary")
 
         $.post("iniciarSesion", $(this).serialize(), function (respuesta) {
-            enableAll();
+            enableAll()
 
             if (respuesta.length) {
-                localStorage.setItem("login", "1");
-                localStorage.setItem("preferencias", JSON.stringify(respuesta[0]));
-                $("#frmInicioSesion").get(0).reset();
-                location.reload();
-                return;
+                localStorage.setItem("login", "1")
+                localStorage.setItem("preferencias", JSON.stringify(respuesta[0]))
+                $("#frmInicioSesion").get(0).reset()
+                location.reload()
+                return
             }
 
-            pop(".div-inicio-sesion", "Usuario y/o contrase&ntilde;a incorrecto(s)", "danger");
-        });
+            pop(".div-inicio-sesion", "Usuario y/o contrase&ntilde;a incorrecto(s)", "danger")
+        })
 
-        disableAll();
-    });
-});
+        disableAll()
+    })
+})
 
 app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory) {
     function buscarRecetas() {
@@ -700,6 +701,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
