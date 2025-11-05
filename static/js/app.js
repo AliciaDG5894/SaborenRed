@@ -570,45 +570,37 @@ app.controller("recetasCtrl", function ($scope, $http) {
         buscarRecetas()
     });
 
-    // $(document).on("click", "#btnBuscarRecetas", function() {
-    //     const busqueda = $("#txtBuscarRecetas").val().trim();
+    $(document).on("click", "#btnBuscarRecetas", function() {
+        const busqueda = $("#txtBuscarRecetas").val().trim();
 
-    //     if(busqueda === "") {
-    //         buscarRecetas();
-    //         return;
-    //     }
+        if(busqueda === "") {
+            buscarRecetas();
+            return;
+        }
 
-    //     $.get("/recetas/buscar", { busqueda: busqueda }, function(registros) {
-    //         let trsHTML = "";
-    //         registros.forEach(renta => {
-    //             trsHTML += `
-    //                 <tr>
-    //                     <td>${renta.idRenta}</td>
-    //                     <td>${renta.nombreCliente}</td>
-    //                     <td>${renta.nombreTraje}</td>
-    //                     <td>${renta.descripcion}</td>
-    //                     <td>${renta.fechaInicioFormato} ${renta.horaInicioFormato}</td>
-    //                     <td>${renta.fechaFinFormato} ${renta.horaFinFormato}</td>
-    //                     <td>
-    //                         <button class="btn btn-sm btn-danger btn-eliminar" data-id="${renta.idRenta}">Eliminar</button>
-    //                         <button class="btn btn-sm btn-warning btn-editar"
-    //                           data-id="{{ renta.idRenta }}"
-    //                           data-cliente-id="{{ renta.idCliente }}"
-    //                           data-traje-id="{{ renta.idTraje }}"
-    //                           data-descripcion="{{ renta.descripcion }}"
-    //                           data-fechahorainicio="{{ renta.fechaHoraInicioISO }}"
-    //                           data-fechahorafin="{{ renta.fechaHoraFinISO }}">
-    //                           Editar
-    //                         </button></td>
-    //                     </td>
-    //                 </tr>
-    //             `;
-    //         });
-    //         $("#tbodyRentas").html(trsHTML);
-    //     }).fail(function(xhr){
-    //         console.error("Error al buscar rentas:", xhr.responseText);
-    //     });
-    // });
+        $.get("/recetas/buscar", { busqueda: busqueda }, function(registros) {
+            let trsHTML = "";
+            registros.forEach(renta => {
+                trsHTML += `
+                    <tr>
+                        <td>{{ receta.IdReceta }}</td>
+                        <td>{{ receta.Nombre }}</td>
+                        <td>{{ receta.Descripcion }}</td>
+                        <td>{{ receta.Ingredientes }}</td>
+                        <td>{{ receta.Utensilios }}</td>
+                        <td>{{ receta.Instrucciones }}</td>
+                        <td>{{ receta.Nutrientes }}</td>
+                        <td>{{ receta.Categorias }}</td>
+                        <td><button class="btn btn-sm btn-danger btn-eliminar" data-id="{{ receta.IdReceta}}">Eliminar</button>
+                        <!-- <button class="btn btn-sm btn-warning btn-editar" data-id="{{ renta.idRenta }}" data-cliente-id="{{ renta.idCliente }}" data-traje-id="{{ renta.idTraje }}" data-descripcion="{{ renta.descripcion }}" data-fechahorainicio="{{ renta.fechaHoraInicioISO }}" data-fechahorafin="{{ renta.fechaHoraFinISO }}">Editar</button></td> -->
+                    </tr>
+                `;
+            });
+            $("#recetasTbody").html(trsHTML);
+        }).fail(function(xhr){
+            console.error("Error al buscar receta:", xhr.responseText);
+        });
+    });
 
     // // Permitir Enter en input
     // $("#txtBuscarRenta").on("keypress", function(e) {
@@ -677,6 +669,7 @@ app.controller("recetasCtrl", function ($scope, $http) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
