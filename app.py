@@ -307,7 +307,7 @@ def buscarReceta():
             Utensilios,
             Instrucciones,
             Nutrientes,
-            Categorias
+            Categorias,
            
     FROM Recetas
     
@@ -336,5 +336,6 @@ def buscarReceta():
         con.close()
 
     return make_response(jsonify(registros))
+
 
 
