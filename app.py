@@ -67,15 +67,15 @@ def handle_exception(e):
     traceback.print_exc()
     return make_response(jsonify({"error": str(e)}), 500)
 
-@app.route("/")
-def landingPage():
+# @app.route("/")
+# def landingPage():
     
-    return render_template("landing-page.html")
+#     return render_template("landing-page.html")
 
-@app.route("/dashboard")
-def dashboard():
+# @app.route("/dashboard")
+# def dashboard():
     
-    return render_template("dashboard.html")
+#     return render_template("dashboard.html")
 
 @app.route("/login")
 def appLogin():
@@ -353,5 +353,6 @@ def recetasTbody():
 
 #     finally:
 #         con.close()
+
 
 #     return make_response(jsonify(registros))
