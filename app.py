@@ -359,9 +359,7 @@ def buscarCategorias():
     ORDER BY Nombre ASC
     LIMIT 10 OFFSET 0
     """
-    val    = (categoria)
-
-# CHECAR FECHA/ listo
+    val    = (categoria,)
 
     try:
         cursor.execute(sql, val)
@@ -376,3 +374,4 @@ def buscarCategorias():
         con.close()
 
     return make_response(jsonify(registros))
+
