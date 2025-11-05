@@ -67,34 +67,38 @@ app.config(function ($routeProvider, $locationProvider) {
     })
 })
 
-app.service("SessionService", function($window) {
-    let tipo = null;
-    let usr = null;
+app.service("SessionService", function () {
+    let instance = null;
+
+    function UserSession() {
+        this.user = null;
+    }
+
+    UserSession.prototype = {
+        setUser: function (userData) {
+            this.user = userData;
+        },
+        getUser: function () {
+            return this.user;
+        },
+        clearUser: function () {
+            this.user = null;
+            localStorage.removeItem("login");
+            localStorage.removeItem("preferencias");
+        },
+        isLoggedIn: function () {
+            return this.user !== null;
+        }
+    };
 
     return {
-        setTipo: function(valor) {
-            tipo = valor;
-            $window.localStorage.setItem("tipo", valor);
-        },
-        getTipo: function() {
-            return tipo || $window.localStorage.getItem("tipo");
-        },
-        setUsr: function(valor) {
-            usr = valor;
-            $window.localStorage.setItem("usr", valor);
-        },
-        getUsr: function() {
-            return usr || $window.localStorage.getItem("usr");
-        },
-        clear: function() {
-            tipo = null;
-            usr = null;
-            $window.localStorage.removeItem("tipo");
-            $window.localStorage.removeItem("usr");
-            $window.localStorage.removeItem("login");
+        getInstance: function () {
+            if (!instance) instance = new UserSession();
+            return instance;
         }
     };
 });
+
 
 app.factory("CategoriaFactory", function () {
     function Categoria(titulo, recetas){
@@ -749,6 +753,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
