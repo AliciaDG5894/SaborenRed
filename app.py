@@ -170,7 +170,7 @@ def recetasTbody():
         Descripcion,
         Ingredientes,
         Utensilios,
-        Instricciones,
+        Instrucciones,
         Nutrientes,
         Categorias
 
@@ -365,5 +365,6 @@ def recetasTbody():
 
 
 #     return make_response(jsonify(registros))
+
 
 
