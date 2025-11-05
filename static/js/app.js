@@ -67,6 +67,44 @@ app.config(function ($routeProvider, $locationProvider) {
     })
 })
 
+app.service("SessionService", function () {
+    let instance = null;
+
+    function UserSession() {
+        this.user = null;
+    }
+
+    UserSession.prototype = {
+        setUser: function (userData) {
+            this.user = userData;
+            localStorage.setItem("preferencias", JSON.stringify(userData));
+            localStorage.setItem("login", "1");
+        },
+        getUser: function () {
+            if (!this.user) {
+                const prefs = localStorage.getItem("preferencias");
+                this.user = prefs ? JSON.parse(prefs) : null;
+            }
+            return this.user;
+        },
+        clearUser: function () {
+            this.user = null;
+            localStorage.removeItem("login");
+            localStorage.removeItem("preferencias");
+        },
+        isLoggedIn: function () {
+            return !!localStorage.getItem("login");
+        }
+    };
+
+    return {
+        getInstance: function () {
+            if (!instance) instance = new UserSession();
+            return instance;
+        }
+    };
+});
+
 app.factory("CategoriaFactory", function () {
     function Categoria(titulo, recetas){
         this.titulo  = titulo
@@ -87,7 +125,7 @@ app.factory("CategoriaFactory", function () {
     }
 })
 
-app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, $timeout) {
+app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
     $rootScope.sendingRequest    = false
@@ -546,33 +584,61 @@ app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, 
             activeMenuOption(`#${path}`)
         }
     })
+    // Después de obtener preferencias desde localStorage:
+    const session = SessionService.getInstance();
+    if ($rootScope.login && $rootScope.preferencias) {
+        session.setUser($rootScope.preferencias);
+    }
+
+    // Dentro de cerrarSesion()
+    function cerrarSesion() {
+        localStorage.removeItem("JWT");
+        session.clearUser(); // 🔹 Limpia también el Singleton
+        $rootScope.login = null;
+        $rootScope.preferencias = {};
+        $rootScope.redireccionar(null, {});
+    }
 }])
 
-app.controller("loginCtrl", function ($scope, $http, $rootScope) {
+app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService) {
     $("#frmInicioSesion").submit(function (event) {
-        event.preventDefault()
+        event.preventDefault();
 
-        pop(".div-inicio-sesion", 'ℹ️Iniciando sesi&oacute;n, espere un momento...', "primary")
+        pop(".div-inicio-sesion", 'ℹ️Iniciando sesi&oacute;n, espere un momento...', "primary");
 
         $.post("iniciarSesion", $(this).serialize(), function (respuesta) {
-            enableAll()
+            enableAll();
 
             if (respuesta.length) {
-                localStorage.setItem("login", "1")
-                localStorage.setItem("preferencias", JSON.stringify(respuesta[0]))
-                $("#frmInicioSesion").get(0).reset()
-                location.reload()
-                return
+                localStorage.setItem("login", "1");
+                localStorage.setItem("preferencias", JSON.stringify(respuesta[0]));
+
+                // datos del usuario también en el Singleton
+                const session = SessionService.getInstance();
+                session.setUser(respuesta[0]);
+                console.log("Sesión iniciada:", session.getUser());
+
+                $("#frmInicioSesion").get(0).reset();
+                location.reload();
+                return;
             }
 
-            pop(".div-inicio-sesion", "Usuario y/o contrase&ntilde;a incorrecto(s)", "danger")
-        })
+            pop(".div-inicio-sesion", "Usuario y/o contrase&ntilde;a incorrecto(s)", "danger");
+        });
 
-        disableAll()
-    })
-})
+        disableAll();
+    });
+});
 
 app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
+    const session = SessionService.getInstance();
+
+    if (session.isLoggedIn()) {
+        $scope.usuarioActivo = session.getUser();
+        // console.log("Usuario actual:", $scope.usuarioActivo);
+    } else {
+        console.warn("No hay sesión activa");
+    }
     
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
@@ -702,6 +768,7 @@ app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
