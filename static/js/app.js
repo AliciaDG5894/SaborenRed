@@ -580,7 +580,7 @@ app.controller("recetasCtrl", function ($scope, $http) {
 
         $.get("/recetas/buscar", { busqueda: busqueda }, function(registros) {
             let trsHTML = "";
-            registros.forEach(renta => {
+            registros.forEach(receta => {
                 trsHTML += `
                     <tr>
                         <td>${receta.IdReceta}</td>
@@ -671,6 +671,7 @@ app.controller("recetasCtrl", function ($scope, $http) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
