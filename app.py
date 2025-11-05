@@ -165,13 +165,13 @@ def recetasTbody():
     cursor = con.cursor(dictionary=True)
     sql = """
     SELECT
-        IdReceta
-        Nombre
-        Descripcion
-        Ingredientes
-        Utensilios
-        Instricciones
-        Nutrientes
+        IdReceta,
+        Nombre,
+        Descripcion,
+        Ingredientes,
+        Utensilios,
+        Instricciones,
+        Nutrientes,
         Categorias
 
     FROM Recetas
@@ -365,4 +365,5 @@ def recetasTbody():
 
 
 #     return make_response(jsonify(registros))
+
 
