@@ -67,19 +67,34 @@ app.config(function ($routeProvider, $locationProvider) {
     })
 })
 
+app.service("SessionService", function() {
+    this.tipo = null
+    this.usr  = null
+    this.SetTipo = function (tipo) {
+        this.tipo = tipo
+    }
+    this.getTipo = function () {
+        return this.tipo
+    }
+    this.setUsr = function (usr) {
+        this.usr = usr
+    }
+    this.getUsr = function () {
+        return this.usr
+    }
+})
+
 app.factory("CategoriaFactory", function () {
     function Categoria(titulo, recetas){
         this.titulo  = titulo
         this.recetas  = recetas
     }
-
     Categoria.prototype.getInfo = function () {
         return {
             titulo: this.titulo,
             recetas: this.recetas
         }
     }
-
     return {
         create: function (titulo, recetas) {
             return new Categoria(titulo, recetas)
@@ -87,7 +102,7 @@ app.factory("CategoriaFactory", function () {
     }
 })
 
-app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, $timeout) {
+app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
     $rootScope.sendingRequest    = false
@@ -117,6 +132,9 @@ app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, 
         preferencias = {}
     }
     $rootScope.preferencias = preferencias
+    SessionService.SetTipo(preferencias.tipo)
+    SessionService.setUsr(preferencias.usr)
+    
 
 
     $rootScope.$on("$routeChangeSuccess", function (event, current, previous) {
@@ -572,7 +590,7 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope) {
     })
 })
 
-app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
+app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory) {
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML)
@@ -580,6 +598,8 @@ app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
     }
 
     buscarRecetas();
+    
+    $scope.SessionService = SessionService
 
     // factory
     $.get("recetas/categorias", {
@@ -701,6 +721,7 @@ app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
