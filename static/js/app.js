@@ -67,40 +67,31 @@ app.config(function ($routeProvider, $locationProvider) {
     })
 })
 
-app.service("SessionService", function () {
-    let instance = null;
-
-    function UserSession() {
-        this.user = null;
-    }
-
-    UserSession.prototype = {
-        setUser: function (userData) {
-            this.user = userData;
-            localStorage.setItem("preferencias", JSON.stringify(userData));
-            localStorage.setItem("login", "1");
-        },
-        getUser: function () {
-            if (!this.user) {
-                const prefs = localStorage.getItem("preferencias");
-                this.user = prefs ? JSON.parse(prefs) : null;
-            }
-            return this.user;
-        },
-        clearUser: function () {
-            this.user = null;
-            localStorage.removeItem("login");
-            localStorage.removeItem("preferencias");
-        },
-        isLoggedIn: function () {
-            return !!localStorage.getItem("login");
-        }
-    };
+app.service("SessionService", function($window) {
+    let tipo = null;
+    let usr = null;
 
     return {
-        getInstance: function () {
-            if (!instance) instance = new UserSession();
-            return instance;
+        setTipo: function(valor) {
+            tipo = valor;
+            $window.localStorage.setItem("tipo", valor);
+        },
+        getTipo: function() {
+            return tipo || $window.localStorage.getItem("tipo");
+        },
+        setUsr: function(valor) {
+            usr = valor;
+            $window.localStorage.setItem("usr", valor);
+        },
+        getUsr: function() {
+            return usr || $window.localStorage.getItem("usr");
+        },
+        clear: function() {
+            tipo = null;
+            usr = null;
+            $window.localStorage.removeItem("tipo");
+            $window.localStorage.removeItem("usr");
+            $window.localStorage.removeItem("login");
         }
     };
 });
@@ -125,14 +116,14 @@ app.factory("CategoriaFactory", function () {
     }
 })
 
-app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, $timeout) {
+app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
     $rootScope.sendingRequest    = false
     $rootScope.incompleteRequest = false
     $rootScope.completeRequest   = false
     $rootScope.login             = localStorage.getItem("login")
-    const defaultRouteAuth       = "#recetas"
+    const defaultRouteAuth       = "recetas"
     let timesChangesSuccessRoute = 0
 
 
@@ -156,6 +147,9 @@ app.run(["$rootScope", "$location", "$timeout", function($rootScope, $location, 
     }
     $rootScope.preferencias = preferencias
 
+    SessionService.setTipo(preferencias.tipo)
+    SessionService.setUsr(preferencias.usr)
+    
 
     $rootScope.$on("$routeChangeSuccess", function (event, current, previous) {
         $rootScope.spinnerGrow = false
@@ -621,9 +615,10 @@ app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
 
     if (session.isLoggedIn()) {
         $scope.usuarioActivo = session.getUser();
-        // console.log("Usuario actual:", $scope.usuarioActivo);
+        console.log("Usuario actual:", $scope.usuarioActivo);
     } else {
         console.warn("No hay sesión activa");
+        return;
     }
     
     function buscarRecetas() {
@@ -754,6 +749,7 @@ app.controller("recetasCtrl", function ($scope, $http, CategoriaFactory) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
