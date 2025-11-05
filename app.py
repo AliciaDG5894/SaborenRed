@@ -336,3 +336,4 @@ def buscarReceta():
         con.close()
 
     return make_response(jsonify(registros))
+
