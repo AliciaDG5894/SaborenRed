@@ -67,6 +67,15 @@ def handle_exception(e):
     traceback.print_exc()
     return make_response(jsonify({"error": str(e)}), 500)
 
+@app.route("/")
+def index():
+    if not con.is_connected():
+        con.reconnect()
+
+    con.close()
+
+    return render_template("index.html")
+
 # @app.route("/")
 # def landingPage():
     
@@ -356,3 +365,4 @@ def recetasTbody():
 
 
 #     return make_response(jsonify(registros))
+
