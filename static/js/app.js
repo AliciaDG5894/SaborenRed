@@ -67,39 +67,6 @@ app.config(function ($routeProvider, $locationProvider) {
     })
 })
 
-app.service("SessionService", function () {
-    let instance = null;
-
-    function UserSession() {
-        this.user = null;
-    }
-
-    UserSession.prototype = {
-        setUser: function (userData) {
-            this.user = userData;
-        },
-        getUser: function () {
-            return this.user;
-        },
-        clearUser: function () {
-            this.user = null;
-            localStorage.removeItem("login");
-            localStorage.removeItem("preferencias");
-        },
-        isLoggedIn: function () {
-            return this.user !== null;
-        }
-    };
-
-    return {
-        getInstance: function () {
-            if (!instance) instance = new UserSession();
-            return instance;
-        }
-    };
-});
-
-
 app.factory("CategoriaFactory", function () {
     function Categoria(titulo, recetas){
         this.titulo  = titulo
@@ -120,7 +87,7 @@ app.factory("CategoriaFactory", function () {
     }
 })
 
-app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
+app.run(["$rootScope", "$location", "$timeout",  function($rootScope, $location, $timeout) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
     $rootScope.sendingRequest    = false
@@ -150,10 +117,6 @@ app.run(["$rootScope", "$location", "$timeout", "SessionService", function($root
         preferencias = {}
     }
     $rootScope.preferencias = preferencias
-
-    SessionService.setTipo(preferencias.tipo)
-    SessionService.setUsr(preferencias.usr)
-    
 
     $rootScope.$on("$routeChangeSuccess", function (event, current, previous) {
         $rootScope.spinnerGrow = false
@@ -596,12 +559,6 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
             if (respuesta.length) {
                 localStorage.setItem("login", "1");
                 localStorage.setItem("preferencias", JSON.stringify(respuesta[0]));
-
-                // datos del usuario también en el Singleton
-                const session = SessionService.getInstance();
-                session.setUser(respuesta[0]);
-                console.log("Sesión iniciada:", session.getUser());
-
                 $("#frmInicioSesion").get(0).reset();
                 location.reload();
                 return;
@@ -615,16 +572,6 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
 });
 
 app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory) {
-    const session = SessionService.getInstance();
-
-    if (session.isLoggedIn()) {
-        $scope.usuarioActivo = session.getUser();
-        console.log("Usuario actual:", $scope.usuarioActivo);
-    } else {
-        console.warn("No hay sesión activa");
-        return;
-    }
-    
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML)
@@ -753,6 +700,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
