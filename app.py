@@ -172,7 +172,7 @@ def recetasTbody():
         Utensilios,
         Instrucciones,
         Nutrientes,
-        Categorias
+        Categorias,
 
     FROM Recetas
 
@@ -181,190 +181,158 @@ def recetasTbody():
     LIMIT 10 OFFSET 0
     """
 
-# REVISAR FECHA/ listo
     cursor.execute(sql)
     registros = cursor.fetchall()
-
-    # Si manejas fechas y horas
-    # for registro in registros:
-    #     inicio = registro["fechaHoraInicio"]
-    #     fin = registro["fechaHoraFin"]
-
-    #     registro["fechaHoraInicioISO"] = inicio.strftime("%Y-%m-%dT%H:%M")
-    #     registro["fechaInicioFormato"] = inicio.strftime("%d/%m/%Y")
-    #     registro["horaInicioFormato"]  = inicio.strftime("%H:%M:%S")
-
-    #     registro["fechaHoraFinISO"] = fin.strftime("%Y-%m-%dT%H:%M")
-    #     registro["fechaFinFormato"] = fin.strftime("%d/%m/%Y")
-    #     registro["horaFinFormato"]  = fin.strftime("%H:%M:%S")
     
     return render_template("RecetasTbody.html", recetas=registros)
 
+# GUARDAR
+@app.route("/recetas", methods=["POST"])
+@login
+def guardarReceta():
+    if not con.is_connected():
+        con.reconnect()
 
-# # GUARDAR
-# @app.route("/renta", methods=["POST"])
-# @login
-# def guardarRenta():
-#     if not con.is_connected():
-#         con.reconnect()
+    IdReceta         = request.form.get("IdReceta")
+    Nombre           = request.form.get("Nombre")
+    Descripcion      = request.form.get("Descripcion")
+    Ingredientes     = request.form.get("Ingredientes")
+    Utensilios       = request.form.get("Utensilios")
+    Instrucciones    = request.form.get("Instrucciones")
+    Nutrientes       = request.form.get("Nutrientes")
+    Categorias       = request.form.get("Categorias")
 
-#     idRenta          = request.form.get("idRenta")
-#     cliente          = request.form["cliente"]
-#     traje            = request.form["traje"]
-#     descripcion      = request.form["descripcion"]
-#     fechahorainicio  = request.form["fechaHoraInicio"]
-#     fechahorafin     = request.form["fechaHoraFin"]
-#     # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
+    # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
     
-#     cursor = con.cursor()
+    cursor = con.cursor()
 
-#     if idRenta:
-#         sql = """
-#         UPDATE rentas
+    if IdReceta:
+        sql = """
+        UPDATE Recetas
 
-#         SET idCliente       = %s,
-#             idTraje         = %s,
-#             descripcion     = %s,
-#             fechaHoraInicio = %s,
-#             fechaHoraFin    = %s
+        SET Nombre          = %s,
+        Descripcion         = %s,
+        Ingredientes        = %s,
+        Utensilios          = %s,
+        Instricciones       = %s,
+        Nutrientes          = %s,
+        Categorias          = %s
 
-#         WHERE idRenta = %s
-#         """
-#         val = (cliente, traje, descripcion, fechahorainicio, fechahorafin, idRenta)
-#     else:
-#         # FALTA CAMBIAR/ listo
-#         sql = """
-#         INSERT INTO rentas (idCliente, idTraje, descripcion, fechaHoraInicio, fechaHoraFin)
-#                     VALUES (   %s,        %s,        %s,            %s,            %s)
-#         """
-#         val =                 (cliente, traje, descripcion, fechahorainicio, fechahorafin)
+        WHERE IdReceta = %s
+        """
+        val = (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
+    else:
+        sql = """
+        INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
+                    VALUES (   %s,        %s,        %s,            %s,            %s)
+        """
+        val =               (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
     
-#     cursor.execute(sql, val)
-#     con.commit()
-#     con.close()
+    cursor.execute(sql, val)
+    con.commit()
+    con.close()
 
-# # CAMBIAR PUSHERRRRRR
-#     pusherRentas()
+    pusherRecetas()
     
-#     return make_response(jsonify({}))
+    return make_response(jsonify({}))
 
 
+# ELIMINAR
+@app.route("/recetas/eliminar", methods=["POST"])
+@login
+def eliminarReceta():
+    if not con.is_connected():
+        con.reconnect()
 
-# # ELIMINAR
-# @app.route("/renta/eliminar", methods=["POST"])
-# @login
-# def eliminarRenta():
-#     if not con.is_connected():
-#         con.reconnect()
+    id = request.form["id"]
 
-#     id = request.form["id"]
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    DELETE FROM Recetas
+    WHERE IdReceta = %s
+    """
+    val    = (id,)
 
-#     cursor = con.cursor(dictionary=True)
-#     sql    = """
-#     DELETE FROM rentas
-#     WHERE idRenta = %s
-#     """
-#     val    = (id,)
+    cursor.execute(sql, val)
+    con.commit()
+    con.close()
 
-#     cursor.execute(sql, val)
-#     con.commit()
-#     con.close()
-
-#     pusherRentas()
+    pusherRecetas()
     
-#     return make_response(jsonify({}))
+    return make_response(jsonify({}))
 
 
-# # EDITAR
-# @app.route("/renta/<int:id>")
-# @login
-# def editarProducto(id):
-#     if not con.is_connected():
-#         con.reconnect()
+# EDITAR
+@app.route("/recetas/<int:id>")
+@login
+def editarReceta(id):
+    if not con.is_connected():
+        con.reconnect()
 
-#     cursor = con.cursor(dictionary=True)
-#     sql    = """
-#     SELECT idRenta, idCliente, idTraje, descripcion, fechaHoraInicio, fechaHoraFin
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    SELECT IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias
 
-#     FROM rentas
+    FROM Recetas
 
-#     WHERE idRenta = %s
-#     """
-#     val    = (id,)
+    WHERE IdRecetas = %s
+    """
+    val    = (id,)
 
-#     cursor.execute(sql, val)
-#     registros = cursor.fetchall()
-#     con.close()
+    cursor.execute(sql, val)
+    registros = cursor.fetchall()
+    con.close()
 
-#     return make_response(jsonify(registros))
+    return make_response(jsonify(registros))
 
 
-# # BUSQUEDA
-# @app.route("/rentas/buscar", methods=["GET"])
-# @login
-# def buscarRentas():
-#     if not con.is_connected():
-#         con.reconnect()
+# BUSQUEDA
+@app.route("/recetas/buscar", methods=["GET"])
+@login
+def buscarReceta():
+    if not con.is_connected():
+        con.reconnect()
 
-#     args     = request.args
-#     busqueda = args["busqueda"]
-#     busqueda = f"%{busqueda}%"
+    args     = request.args
+    busqueda = args["busqueda"]
+    busqueda = f"%{busqueda}%"
     
-# # EN WHERE BUSQUEDA PUSE SOLO TRES POR EL "VAL" NO SE SI SE LIMITE (si se limita)
-#     cursor = con.cursor(dictionary=True)
-#     sql    = """
-#     SELECT rentas.idRenta,
-#            clientes.idCliente,
-#            clientes.nombreCliente,
-#            trajes.idTraje,
-#            trajes.nombreTraje,
-#            rentas.descripcion,
-#            rentas.fechaHoraInicio,
-#            rentas.fechaHoraFin
+# EN WHERE BUSQUEDA PUSE SOLO TRES POR EL "VAL" NO SE SI SE LIMITE (si se limita)
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    SELECT  IdReceta,
+            Nombre,
+            Descripcion,
+            Ingredientes,
+            Utensilios,
+            Instrucciones,
+            Nutrientes,
+            Categorias
            
-#     FROM rentas
-#     INNER JOIN clientes ON rentas.idCliente = clientes.idCliente
-#     INNER JOIN trajes ON rentas.idTraje = trajes.idTraje
+    FROM Recetas
     
-#     WHERE clientes.nombreCliente LIKE %s
-#        OR trajes.nombreTraje LIKE %s
-#        OR rentas.fechaHoraInicio LIKE %s
-#        OR rentas.fechaHoraFin LIKE %s
-#     ORDER BY idRenta DESC
-#     LIMIT 10 OFFSET 0
-#     """
-#     val    = (busqueda, busqueda, busqueda, busqueda)
+    WHERE Nombre LIKE %s
+       OR Ingredientes LIKE %s
+       OR Nutrientes %s
+       OR Categorias LIKE %s
 
-# # CHECAR FECHA/ listo
+    ORDER BY IdReceta DESC
+    LIMIT 10 OFFSET 0
+    """
+    val    = (busqueda, busqueda, busqueda, busqueda)
 
-#     try:
-#         cursor.execute(sql, val)
-#         registros = cursor.fetchall()
+# CHECAR FECHA/ listo
 
-#         # Si manejas fechas y horas(comentario de profe)
-
-#         for registro in registros:
-#             inicio = registro["fechaHoraInicio"]
-#             fin = registro["fechaHoraFin"]
-    
-#             registro["fechaHoraInicioISO"] = inicio.strftime("%Y-%m-%dT%H:%M")
-#             registro["fechaInicioFormato"] = inicio.strftime("%d/%m/%Y")
-#             registro["horaInicioFormato"]  = inicio.strftime("%H:%M:%S")
-    
-#             registro["fechaHoraFinISO"] = fin.strftime("%Y-%m-%dT%H:%M")
-#             registro["fechaFinFormato"] = fin.strftime("%d/%m/%Y")
-#             registro["horaFinFormato"]  = fin.strftime("%H:%M:%S")
+    try:
+        cursor.execute(sql, val)
+        registros = cursor.fetchall()
         
 
-#     except mysql.connector.errors.ProgrammingError as error:
-#         print(f"Ocurrió un error de programación en MySQL: {error}")
-#         registros = []
+    except mysql.connector.errors.ProgrammingError as error:
+        print(f"Ocurrió un error de programación en MySQL: {error}")
+        registros = []
 
-#     finally:
-#         con.close()
+    finally:
+        con.close()
 
-
-#     return make_response(jsonify(registros))
-
-
-
+    return make_response(jsonify(registros))
