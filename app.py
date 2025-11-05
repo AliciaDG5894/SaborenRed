@@ -214,7 +214,7 @@ def recetasTbody():
 #         Descripcion         = %s,
 #         Ingredientes        = %s,
 #         Utensilios          = %s,
-#         Instricciones       = %s,
+#         Instrucciones       = %s,
 #         Nutrientes          = %s,
 #         Categorias          = %s
 
@@ -224,7 +224,7 @@ def recetasTbody():
 #     else:
 #         sql = """
 #         INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
-#                     VALUES (   %s,        %s,        %s,            %s,            %s)
+#                     VALUES (   %s,       %s,        %s,          %s,          %s,           %s,          %s,         %s)
 #         """
 #         val =               (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
     
@@ -336,6 +336,7 @@ def buscarReceta():
         con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
