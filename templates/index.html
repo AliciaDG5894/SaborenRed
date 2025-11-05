@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" ng-app="angularjsApp">
+<html lang="es" ng-app="angularjsApp" style="overflow-x: hidden;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,13 +27,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js" integrity="sha512-K/oyQtMXpxI4+K0W7H25UopjM8pzq0yrVdFdG21Fh5dBe91I40pDd9A4lzNlHPHBIP2cwZuoxaUSX0GJSObvGA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/es.min.js" integrity="sha512-qNFoLkoKxYYiUEW14iAJbDcNsfoLTNznoq7UTa5xUp23NmGnlgC/pPWzN5kMcQC4bm+eFx2ibqelc3ARWf+SJw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.3.2/jsencrypt.min.js" integrity="sha512-94ncgEEqkuZ4yNTFmu2dSn1TJ6Ij+ANQqpR7eLVU99kzvYzu6UjBxuVoNHtnd29R+T6nvK+ugCVI698pbyEkvQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="/assets/js/plotly.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.0/css/dataTables.bootstrap5.min.css" />
+    <script src="https://cdn.datatables.net/2.3.0/js/dataTables.min.js" defer></script>
+    <script src="https://cdn.datatables.net/2.3.0/js/dataTables.bootstrap5.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.bootstrap5.min.css" />
+    <script src="https://cdn.datatables.net/fixedheader/4.0.1/js/dataTables.fixedHeader.min.js" defer></script>
+    <script src="https://cdn.datatables.net/fixedheader/4.0.1/js/fixedHeader.bootstrap5.min.js" defer></script>
+
     <title>APP / AngularJS</title>
 
-    <!-- CSS: JQuery Validate -->
-    <style>.form-control:focus {box-shadow: none !important;}; label.is-invalid {background: red; padding: 3px; margin: 3px; border-radius: 3px; font-weight: bold; width: 100%;};</style>
+    <!-- CSS -->
+    <style>.form-control:focus {box-shadow: none !important;} label.is-invalid {padding: 3px; margin: 3px; border-radius: 3px; font-weight: bold; width: 100%;} .dt-length select, .dt-search input {font-size: 1.25rem;} html, body {overflow-x: hidden;}</style>
+
+    <!-- CSS: Swipes -->
+    <style>#appSwipeContainer {position: relative; width: 100vw; height: 100%; overflow: hidden; user-select: none;} #appSwipeWrapper {display: flex; width: 300vw; transform: translateX(-100vw); will-change: transform;} #appContentLeft, #appContent, #appContentRight {flex: 0 0 100vw; max-width: 100vw; box-sizing: border-box; display: block; width: 100vw; overflow-x: hidden; padding: 1rem;}</style>
 
     <!-- JS: Utils/functions.js -->
-    <script>function saveEntryCursorPosition(t,o){if(!("selectionStart"in t))return;let e=[t.selectionStart,t.selectionEnd];o(e),e.length&&(t.selectionStart=e[0],t.selectionEnd=e[1])}function likeText(t,o){try{return RegExp(t,"i").test(o)}catch(e){try{return -1!=o.indexOf(t)}catch(a){return!0}}}function textboxEntryPattern(t,o){saveEntryCursorPosition(t,function(e){let a=t.value.split(""),s=0;for(let n in a)!likeText("["+o+"]",a[n])&&(a[n]="",s++);t.value=a.join(""),e[0]-=s,e[1]-=s})}function textboxEntryCase(t,o){saveEntryCursorPosition(t,function(){let e=t.value;if("u"==o)t.hasAttribute("autocapitalize")||t.setAttribute("autocapitalize","characters"),e=e.toUpperCase();else if("l"==o)t.hasAttribute("autocapitalize")||t.setAttribute("autocapitalize","off"),e=e.toLowerCase();else if("c"==o){t.hasAttribute("autocapitalize")||t.setAttribute("autocapitalize","words");let a=e.split(" ");for(let s in a){let n=a[s].split("");if(n.length)for(let l in n){let i=n[l];if(likeText("[a-z]",i)){n[l]=i.toUpperCase();break}}a[s]=n.join("")}e=a.join(" ")}t.value=e})}function toast(t,o,e){if(o=o?1e3*o:3e3,t){if(null==document.getElementById("toast-message")){let a=$("<div />");a.addClass("p-2 rounded").attr("id","toast-message").css({background:"#000",color:"#fff",position:"fixed",bottom:"1%",left:"1%",right:"1%",textAlign:"center",zIndex:"999999"}).hide(),$("body").append(a)}$("#toast-message").html(t).fadeToggle(o,function(t){$(this).fadeToggle(o,function(t){$(this).remove(),"function"==typeof e&&e()})})}}function modal(t,o,e,a){let s=`<div class="modal fade" id="modal-message" tabindex="-1" role="dialog" aria-labelledby="modal-message-title" aria-hidden="true">
+    <script>
+        function saveEntryCursorPosition(t,o){if(!("selectionStart"in t))return;let e=[t.selectionStart,t.selectionEnd];o(e),e.length&&(t.selectionStart=e[0],t.selectionEnd=e[1])}function likeText(t,o){try{return RegExp(t,"i").test(o)}catch(e){try{return -1!=o.indexOf(t)}catch(a){return!0}}}function textboxEntryPattern(t,o){saveEntryCursorPosition(t,function(e){let a=t.value.split(""),s=0;for(let n in a)!likeText("["+o+"]",a[n])&&(a[n]="",s++);t.value=a.join(""),e[0]-=s,e[1]-=s})}function textboxEntryCase(t,o){saveEntryCursorPosition(t,function(){let e=t.value;if("u"==o)t.hasAttribute("autocapitalize")||t.setAttribute("autocapitalize","characters"),e=e.toUpperCase();else if("l"==o)t.hasAttribute("autocapitalize")||t.setAttribute("autocapitalize","off"),e=e.toLowerCase();else if("c"==o){t.hasAttribute("autocapitalize")||t.setAttribute("autocapitalize","words");let a=e.split(" ");for(let s in a){let n=a[s].split("");if(n.length)for(let l in n){let i=n[l];if(likeText("[a-z]",i)){n[l]=i.toUpperCase();break}}a[s]=n.join("")}e=a.join(" ")}t.value=e})}function toast(t,o,e){if(o=o?1e3*o:3e3,t){if(null==document.getElementById("toast-message")){let a=$("<div />");a.addClass("p-2 rounded").attr("id","toast-message").css({background:"#000",color:"#fff",position:"fixed",bottom:"1%",left:"1%",right:"1%",textAlign:"center",zIndex:"999999"}).hide(),$("body").append(a)}$("#toast-message").html(t).fadeToggle(o,function(t){$(this).fadeToggle(o,function(t){$(this).remove(),"function"==typeof e&&e()})})}}function modal(t,o,e,a){let s=`<div class="modal fade" id="modal-message" tabindex="-1" role="dialog" aria-labelledby="modal-message-title" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header ${a=a||""}">
@@ -76,23 +91,61 @@
     <script src="{{ url_for("static", filename="js/app.js") }}"></script>
 </head>
 <body>
-    <div class="float-end mt-1 me-3" style="font-size: 1.25rem;">
-        <i class="bi bi-clock"></i>
-         {{ '{{ angularjsHora }}' }}
+    <div id="appSpinnerGrow" ng-if="spinnerGrow">
+        <div class="text-center p-5 m-5">
+            <div class="spinner-grow p-5 m-5" style="width: 80px; height: 80px;" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
     </div>
 
-    <ul class="app-menu nav nav-underline justify-content-center">
-        <li class="nav-item">
-            <a class="nav-link" href="#/">Inicio</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#/recetas">Recetas</a>
-        </li>
-    </ul>
+    <div id="appBanner" class="ng-hide" ng-show="!spinnerGrow">
+        <div id="appHeader" class="text-end fw-bolder" style="font-size: 1.25rem;">
+            <i class="bi bi-clock"></i>
+            {{ '{{ angularjsHora }}' }}
+            <button class="btn btn-lg btn-cerrar-sesion ng-hide" ng-show="login">
+                <i class="bi bi-box-arrow-right"></i>
+            </button>
+        </div>
+    
+        <ul id="appMenu" class="nav nav-underline justify-content-center">
+            <li class="nav-item ng-hide" ng-show="!login" style="display: none;">
+                <a class="nav-link" href="#/">Iniciar Sesión</a>
+            </li>
+            <li class="nav-item ng-hide" ng-show="login">
+                <a class="nav-link" href="#/recetas">Recetas</a>
+            </li>  
+    
+        </ul>
+    </div>
 
-    <div id="appContent" class="app-content container p-3 {{ '{{ slide }}' }}" ng-view></div>
+    <div id="app" class="ng-hide" ng-show="!spinnerGrow">
+        <div id="appSwipeContainer">
+            <div id="appSwipeWrapper" style="cursor: grab;">
+                <div id="appContentLeft" style="visibility: hidden;">
+                    <div style="position: relative; top: 25%; left: 0; text-align: center; visibility: hidden;" data-href="{{ leftViewLink }}">
+                        <h5>{{ leftView }}</h5>
+                        <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="appContent" class="{{ slide }}" ng-view></div>
+                <div id="appContentRight" style="visibility: hidden;">
+                    <div style="position: relative; top: 25%; left: 0; text-align: center; visibility: hidden;" data-href="{{ rightViewLink }}">
+                        <h5>{{ rightView }}</h5>
+                        <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="app-float-button bg-body" style="z-index: 2; position: fixed; bottom: 5px; left: 5px; cursor: pointer;">
+    <div id="appSpace" style="height: 4rem;"></div>
+
+    <div id="appButtonAppearanceTheme" style="z-index: 2; position: fixed; bottom: 5px; left: 5px; cursor: pointer;">
         <ul class="list-group list-group-horizontal">
             <li class="list-group-item" data-bs-theme-value="light">
                 <i class="bi bi-sun-fill"></i>
