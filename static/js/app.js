@@ -582,8 +582,8 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
                 localStorage.setItem("login", "1")
                 localStorage.setItem("preferencias", JSON.stringify(respuesta[0]))
 
-                SesionService.setUsr(respuesta[0].usr || respuesta[0].nombre || "Desconocido")
-                SesionService.setTipo(respuesta[0].tipo || "Sin tipo")
+                SessionService.setUsr(respuesta[0].usr || respuesta[0].nombre || "Desconocido")
+                SessionService.setTipo(respuesta[0].tipo || "Sin tipo")
                 
                 $("#frmInicioSesion").get(0).reset()
                 location.reload()
@@ -732,6 +732,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
