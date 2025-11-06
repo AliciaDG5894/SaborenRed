@@ -567,7 +567,7 @@ app.run(["$rootScope", "$location", "$timeout", "SessionService", function($root
     })
 }])
 
-app.controller("loginCtrl", function ($scope, $http, $rootScope, SesionService) {
+app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService) {
     $("#frmInicioSesion").submit(function (event) {
         event.preventDefault()
 
@@ -730,6 +730,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
