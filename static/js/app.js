@@ -83,7 +83,7 @@ app.service("SessionService", function() {
         return this.usr
     }
 
-    console.log("SesionService cargado")
+    console.log("SessionService cargado")
 })
 
 app.factory("CategoriaFactory", function () {
@@ -732,6 +732,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
