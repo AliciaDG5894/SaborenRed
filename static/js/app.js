@@ -622,6 +622,15 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     })
 
+    $.get("recetas/categorias", {
+        categoria: "Desayunos"
+    }, function (desayunos) {
+        const categoriaDesayunos = CategoriaFactory.create("Desayunos", desayunos)
+        console.log("Comida desayunos FACTORY", categoriaDesayunos.getInfo())
+        $scope.categoriaDesayunos = categoriaDesayunos
+
+    })
+
     Pusher.logToConsole = true;
     var pusher = new Pusher('b51b00ad61c8006b2e6f', {
       cluster: 'us2'
@@ -732,6 +741,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
