@@ -681,29 +681,31 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         }
     });
 
-    // $(document).on("submit", "#frmRecetas", function (event) {
-    //     event.preventDefault();
+    $(document).on("submit", "#frmRecetas", function (event) {
+        event.preventDefault();
 
-    //     const idRenta = $("#IdReceta").val(); 
+        const idRenta = $("#IdReceta").val(); 
 
-    //     $.post("/recetas", {
-    //         idRenta: $("#idRenta").val(),
-    //         cliente: $("#txtIdCliente").val(),
-    //         traje: $("#txtIdTraje").val(),
-    //         descripcion: $("#txtDescripcion").val(),
-    //         fechaHoraInicio: $("#txtFechaInicio").val(),
-    //         fechaHoraFin: $("#txttxtFechaFin").val()
+        $.post("/recetas", {
+            IdReceta: $("#idReceta").val(),
+            Nombre: $("#txtNombre").val(),
+            Descripcion: $("#txtDescripcion").val(),
+            Ingredientes: $("#txtIngredientes").val(),
+            Utensilios: $("#txtUtensilios").val(),
+            Instrucciones: $("#txtInstrucciones").val(),
+            Nutrientes: $("#txtNutrientes").val(),
+            Categorias: $("#txtCategoria").val()
 
-    //     }, function(response){
-    //         console.log("Renta guardada o actualizada correctamente");
-    //         $("#frmRenta")[0].reset();
-    //         $("#idRenta").val("");
-    //         buscarRentas(); 
-    //     }).fail(function(xhr){
-    //         console.error("Error al guardar/actualizar renta:", xhr.responseText);
-    //     });
+        }, function(response){
+            console.log("Receta guardada o actualizada correctamente");
+            $("#frmRecetas")[0].reset();
+            $("#idReceta").val("");
+            buscarRentas(); 
+        }).fail(function(xhr){
+            console.error("Error al guardar/actualizar receta:", xhr.responseText);
+        });
 
-    // });
+    });
 
     $(document).on("click", "#recetasTbody .btn-eliminar", function(){
         const id = $(this).data("id");
@@ -741,6 +743,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
