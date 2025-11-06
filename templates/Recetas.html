@@ -53,6 +53,15 @@
     </div>
 </div>
 
+<h5>{{ "{{ categoriaDesayunos.titulo }}" }}</h5>
+<div class="card text-bg-info mb-3" style="max-width: 18rem;" ng-repeat="receta in  categoriaDesayunos.recetas ">
+    <div class="card-header">Receta</div>
+    <div class="card-body">
+        <h3 class="card-title">{{ "{{ receta.Nombre }} "}}</h3>
+        <p class="card-text"></p>
+    </div>
+</div>
+
 <div class="table-responsive">
     <table class="table table-sm">
         <thead class="table-active">
@@ -71,3 +80,4 @@
         <tbody id="recetasTbody"></tbody>
     </table>
 </div>
+
