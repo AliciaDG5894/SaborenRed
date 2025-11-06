@@ -132,8 +132,9 @@ app.run(["$rootScope", "$location", "$timeout", "SessionService", function($root
         preferencias = {}
     }
     $rootScope.preferencias = preferencias
-    SessionService.SetTipo(preferencias.tipo)
-    SessionService.setUsr(preferencias.usr)
+    
+    if (preferencias.tipo)  SessionService.setTipo(preferencias.tipo)
+    if (preferencias.usr)   SessionService.setUsr(preferencias.usr)
     
 
 
@@ -566,7 +567,7 @@ app.run(["$rootScope", "$location", "$timeout", "SessionService", function($root
     })
 }])
 
-app.controller("loginCtrl", function ($scope, $http, $rootScope) {
+app.controller("loginCtrl", function ($scope, $http, $rootScope, SesionService) {
     $("#frmInicioSesion").submit(function (event) {
         event.preventDefault()
 
@@ -578,6 +579,10 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope) {
             if (respuesta.length) {
                 localStorage.setItem("login", "1")
                 localStorage.setItem("preferencias", JSON.stringify(respuesta[0]))
+
+                SesionService.setUsr(respuesta[0].usr || respuesta[0].nombre || "Desconocido")
+                SesionService.setTipo(respuesta[0].tipo || "Sin tipo")
+                
                 $("#frmInicioSesion").get(0).reset()
                 location.reload()
                 return
@@ -600,6 +605,10 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     buscarRecetas();
     
     $scope.SessionService = SessionService
+    
+    $scope.mostrarUsuario = function () {
+        console.log("Usuario actual:", SessionService.getUsr())
+    }
 
     // factory
     $.get("recetas/categorias", {
@@ -721,6 +730,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
