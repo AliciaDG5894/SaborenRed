@@ -70,7 +70,7 @@ app.config(function ($routeProvider, $locationProvider) {
 app.service("SessionService", function() {
     this.tipo = null
     this.usr  = null
-    this.SetTipo = function (tipo) {
+    this.setTipo = function (tipo) {
         this.tipo = tipo
     }
     this.getTipo = function () {
@@ -730,6 +730,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
