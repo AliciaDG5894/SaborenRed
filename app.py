@@ -226,7 +226,7 @@ def guardarReceta():
         INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
                     VALUES (   %s,       %s,        %s,          %s,          %s,           %s,          %s,         %s)
         """
-        val =               (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
+        val =               (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
     
     cursor.execute(sql, val)
     con.commit()
@@ -374,5 +374,6 @@ def buscarCategorias():
         con.close()
 
     return make_response(jsonify(registros))
+
 
 
