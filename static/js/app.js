@@ -670,32 +670,40 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     })
 
     // DECORATOR: aplicación del filtro
-    $scope.filtros = {
-        calorias: false
-    };
+    $scope.filtros = { calorias: false }
+    $scope.recetasFiltradas = []
 
-    $scope.recetas = [];
-    $scope.recetasFiltradas = [];
+    // Cargar recetas desde la base de datos
+    function cargarRecetas() {
+        $http.get("/recetas")  // url
+            .then(function (response) {
+                const recetas = response.data
 
-    // Cargar recetas desde el backend
-    $http.get("api/recetas").then(function (response) {
-        $scope.recetas = response.data;
-        $scope.aplicarFiltros();
-    });
+                // Crear la búsqueda base
+                let busqueda = new FiltrosService.BusquedaBase(recetas)
 
-    // Aplica decoradores según los filtros seleccionados
+                // Si el usuario activó el filtro, aplicar decorador
+                if ($scope.filtros.calorias) {
+                    busqueda = new FiltrosService.FiltroPorCalorias(busqueda)
+                }
+
+                $scope.recetasFiltradas = busqueda.obtenerResultados()
+            })
+            .catch(function (error) {
+                console.error("Error al obtener recetas:", error)
+            })
+    }
+
+    // Aplicar filtros cada vez que cambien
     $scope.aplicarFiltros = function () {
-        let busqueda = new FiltrosService.BusquedaBase($scope.recetas);
+        cargarRecetas()
+    }
 
-        if ($scope.filtros.calorias) {
-            busqueda = new FiltrosService.FiltroPorCalorias(busqueda);
-        }
-
-        $scope.recetasFiltradas = busqueda.obtenerResultados();
-    };
+    // Cargar recetas al iniciar
+    cargarRecetas()
     
     
-    // Pucher
+    // Pusher
     Pusher.logToConsole = true;
     var pusher = new Pusher('b51b00ad61c8006b2e6f', {
       cluster: 'us2'
@@ -808,6 +816,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
