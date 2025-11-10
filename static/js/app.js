@@ -104,44 +104,6 @@ app.factory("CategoriaFactory", function () {
     }
 })
 
-
-app.factory("FiltrosService", function() {
-    // Clase base
-    function BusquedaBase(recetas) {
-        this.recetas = recetas
-
-        this.obtenerResultados = function() {
-            return this.recetas
-        }
-    }
-
-    // Decorador base
-    function FiltroDecorator(busqueda) {
-        this.busqueda = busqueda
-
-        this.obtenerResultados = function() {
-            return this.busqueda.obtenerResultados()
-        }
-    }
-
-    // Filtros específicos
-    function FiltroPorCalorias(busqueda) {
-        FiltroDecorator.call(this, busqueda)
-
-        this.obtenerResultados = function() {
-            return this.busqueda.obtenerResultados().filter(function(r) {
-                return r.calorias < 500
-            })
-        }
-    }
-
-    return {
-        BusquedaBase,
-        FiltroPorCalorias
-    }
-})
-
-
 app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
@@ -635,7 +597,7 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
     })
 })
 
-app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, FiltrosService) {
+app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory) {
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML)
@@ -668,40 +630,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         $scope.categoriaDesayunos = categoriaDesayunos
 
     })
-
-    // DECORATOR: aplicación del filtro
-    $scope.filtros = { calorias: false }
-    $scope.recetasFiltradas = []
-
-    // Cargar recetas desde la base de datos
-    function cargarRecetas() {
-        $http.get("/recetas")  // url
-            .then(function (response) {
-                const recetas = response.data
-
-                // Crear la búsqueda base
-                let busqueda = new FiltrosService.BusquedaBase(recetas)
-
-                // Si el usuario activó el filtro, aplicar decorador
-                if ($scope.filtros.calorias) {
-                    busqueda = new FiltrosService.FiltroPorCalorias(busqueda)
-                }
-
-                $scope.recetasFiltradas = busqueda.obtenerResultados()
-            })
-            .catch(function (error) {
-                console.error("Error al obtener recetas:", error)
-            })
-    }
-
-    // Aplicar filtros cada vez que cambien
-    $scope.aplicarFiltros = function () {
-        cargarRecetas()
-    }
-
-    // Cargar recetas al iniciar
-    cargarRecetas()
-    
     
     // Pusher
     Pusher.logToConsole = true;
@@ -816,6 +744,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
