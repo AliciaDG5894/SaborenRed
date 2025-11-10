@@ -104,6 +104,10 @@ app.factory("CategoriaFactory", function () {
     }
 })
 
+app.service("MensajesService", function() {
+    this.modal = modal
+})
+
 app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
@@ -597,7 +601,20 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
     })
 })
 
-app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory) {
+app.config(function ($routeProvider, $locationProvider, $provide) {
+    $provide.decorator("MensajesService", function ($delegate, $log) {
+        const originalModal = $delegate.modal
+
+        $delegate.modal = function (msg) { 
+            originalModal(msg, "Mensaje", [
+                {"html": "Aceptar", "class": "btn btn-lg btn-secondary", default: true, dismiss: true}
+            ])
+        }
+        return $delegate
+    })
+})
+
+app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService) {
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML)
@@ -698,6 +715,8 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             Categorias: $("#txtCategoria").val()
 
         }, function(response){
+            MensajesService.modal("has guardado el producto.")
+            
             console.log("Receta guardada o actualizada correctamente");
             $("#frmRecetas")[0].reset();
             $("#idReceta").val("");
@@ -744,6 +763,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
