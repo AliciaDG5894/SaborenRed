@@ -635,7 +635,7 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
     })
 })
 
-app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory) {
+app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, FiltrosService) {
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML)
@@ -816,6 +816,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
