@@ -4,6 +4,35 @@
 </div>
 <br>
 
+<div ng-controller="recetasCtrl">
+    <h2>🍳 Buscar Recetas</h2>
+
+    <!-- Filtros -->
+    <div class="filtros">
+        <label>
+            <input type="checkbox" ng-model="filtros.calorias" ng-change="aplicarFiltros()">
+            Menos de 500 calorías
+        </label>
+    </div>
+
+    <hr>
+
+    <!-- Resultados -->
+    <div class="recetas">
+        <div ng-repeat="r in recetasFiltradas" class="receta-card">
+            <h3>{{ r.nombre }}</h3>
+            <p>⏱ {{ r.tiempo }} min</p>
+            <p>{{ r.descripcion }}</p>
+            <small>{{ r.calorias }} cal</small>
+        </div>
+
+        <p ng-if="!recetasFiltradas.length">
+            No se encontraron recetas con esos filtros.
+        </p>
+    </div>
+</div>
+
+
 <div class="mb-3 input-group">
     <input type="text" class="form-control" id="txtBuscarReceta" placeholder="Buscar receta">
     <button class="btn btn-secondary" id="btnBuscarReceta" type="button">Buscar</button>
@@ -86,6 +115,7 @@
         <tbody id="recetasTbody"></tbody>
     </table>
 </div>
+
 
 
 
