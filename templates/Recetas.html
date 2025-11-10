@@ -3,6 +3,37 @@
     <h3>Bienvenido, {{ ' {{ SessionService.getUsr() }} ' }}</h3>
 </div>
 <br>
+
+<div ng-controller="recetasCtrl">
+    <h2>🍳 Buscar Recetas</h2>
+
+    <div class="mb-3 input-group">
+        <input type="text" class="form-control" id="txtBuscarReceta" placeholder="Buscar receta">
+        <button class="btn btn-secondary" id="btnBuscarReceta" type="button">Buscar</button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filtros">
+        <label>
+            <input type="checkbox" ng-model="filtros.calorias" ng-change="aplicarFiltros()">
+            Menos de 500 calorías
+        </label>
+    </div>
+
+    <hr>
+
+    <!-- Resultados -->
+    <div class="recetas">
+        <div ng-repeat="r in recetasFiltradas" class="receta-card">
+            <h3>{{ r.nombre }}</h3>
+            <p>⏱ {{ r.tiempo }} min</p>
+            <p>{{ r.descripcion }}</p>
+        </div>
+
+        <p ng-if="!recetasFiltradas.length">No se encontraron recetas con esos filtros.</p>
+    </div>
+</div>
+
 <!-- <form id="frmRecetas" method="post">
     <input type="hidden" id="idReceta" name="idReceta">
 
@@ -80,6 +111,7 @@
         <tbody id="recetasTbody"></tbody>
     </table>
 </div>
+
 
 
 
