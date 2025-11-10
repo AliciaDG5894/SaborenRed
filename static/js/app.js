@@ -104,6 +104,44 @@ app.factory("CategoriaFactory", function () {
     }
 })
 
+
+app.factory("FiltrosService", function() {
+    // Clase base
+    function BusquedaBase(recetas) {
+        this.recetas = recetas
+
+        this.obtenerResultados = function() {
+            return this.recetas
+        }
+    }
+
+    // Decorador base
+    function FiltroDecorator(busqueda) {
+        this.busqueda = busqueda
+
+        this.obtenerResultados = function() {
+            return this.busqueda.obtenerResultados()
+        }
+    }
+
+    // Filtros específicos
+    function FiltroPorCalorias(busqueda) {
+        FiltroDecorator.call(this, busqueda)
+
+        this.obtenerResultados = function() {
+            return this.busqueda.obtenerResultados().filter(function(r) {
+                return r.calorias < 500
+            })
+        }
+    }
+
+    return {
+        BusquedaBase,
+        FiltroPorCalorias
+    }
+})
+
+
 app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
@@ -631,6 +669,33 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     })
 
+    // DECORATOR: aplicación del filtro
+    $scope.filtros = {
+        calorias: false
+    };
+
+    $scope.recetas = [];
+    $scope.recetasFiltradas = [];
+
+    // Cargar recetas desde el backend
+    $http.get("api/recetas").then(function (response) {
+        $scope.recetas = response.data;
+        $scope.aplicarFiltros();
+    });
+
+    // Aplica decoradores según los filtros seleccionados
+    $scope.aplicarFiltros = function () {
+        let busqueda = new FiltrosService.BusquedaBase($scope.recetas);
+
+        if ($scope.filtros.calorias) {
+            busqueda = new FiltrosService.FiltroPorCalorias(busqueda);
+        }
+
+        $scope.recetasFiltradas = busqueda.obtenerResultados();
+    };
+    
+    
+    // Pucher
     Pusher.logToConsole = true;
     var pusher = new Pusher('b51b00ad61c8006b2e6f', {
       cluster: 'us2'
@@ -743,6 +808,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
