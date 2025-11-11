@@ -69,19 +69,17 @@ app.config(function ($routeProvider, $locationProvider) {
 
 app.service("SessionService", function() {
     this.tipo = null
-    this.usr  = null
-    this.setTipo = function (tipo) {
-        this.tipo = tipo
-    }
-    this.getTipo = function () {
-        return this.tipo
-    }
-    this.setUsr = function (usr) {
-        this.usr = usr
-    }
-    this.getUsr = function () {
-        return this.usr
-    }
+    this.usr  = null     // nombre de usuario
+    this.id   = null     // Id_Usuario numérico
+
+    this.setTipo = function (tipo) { this.tipo = tipo }
+    this.getTipo = function () { return this.tipo }
+
+    this.setUsr = function (usr) { this.usr = usr }     // nombre
+    this.getUsr = function () { return this.usr }
+
+    this.setId = function (id) { this.id = id }        // ID numérico
+    this.getId = function () { return this.id }
 
     console.log("SessionService cargado")
 })
@@ -605,19 +603,21 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
         $.post("iniciarSesion", $(this).serialize(), function (respuesta) {
             enableAll()
 
-            if (respuesta.length) {
-                SessionService.setUsr(respuesta[0].Id_Usuario);
-                localStorage.setItem("login", "1")
-                localStorage.setItem("preferencias", JSON.stringify(respuesta[0]))
-                
-
-                SessionService.setUsr(respuesta[0].usr || respuesta[0].nombre || "Desconocido")
-                SessionService.setTipo(respuesta[0].tipo || "Sin tipo")
-                
-                $("#frmInicioSesion").get(0).reset()
-                location.reload()
-                return
-            }
+        if (respuesta.length) {
+            localStorage.setItem("login", "1")
+            localStorage.setItem("preferencias", JSON.stringify(respuesta[0]))
+        
+            // guardar nombre para las funciones que lo usan
+            SessionService.setUsr(respuesta[0].Nombre_Usuario || "Desconocido")
+            SessionService.setTipo(respuesta[0].Tipo_Usuario || "Sin tipo")
+        
+            // guardar Id_Usuario para rutas /recetas/<int:Id_Usuario>
+            SessionService.setId(respuesta[0].Id_Usuario)
+        
+            $("#frmInicioSesion").get(0).reset()
+            location.reload()
+            return
+        }
 
             pop(".div-inicio-sesion", "Usuario y/o contrase&ntilde;a incorrecto(s)", "danger")
         })
@@ -654,9 +654,9 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         console.log("Usuario actual:", SessionService.getUsr())
     }
     
-    const Id_Usuario = SessionService.getUsr() // tu servicio de sesión
+    const Id_Usuario = SessionService.getId()  // ⚡ número
     RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
-        $scope.recetas = recetas;  // ahora tienes todas las recetas y favoritos
+        $scope.recetas = recetas
         console.log($scope.recetas)
     })
 
@@ -794,6 +794,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
