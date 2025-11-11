@@ -606,8 +606,10 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
             enableAll()
 
             if (respuesta.length) {
+                SessionService.setUsr(respuesta[0].Id_Usuario);
                 localStorage.setItem("login", "1")
                 localStorage.setItem("preferencias", JSON.stringify(respuesta[0]))
+                
 
                 SessionService.setUsr(respuesta[0].usr || respuesta[0].nombre || "Desconocido")
                 SessionService.setTipo(respuesta[0].tipo || "Sin tipo")
@@ -792,6 +794,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
