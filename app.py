@@ -379,7 +379,8 @@ def buscarCategorias():
 @app.route("/recetas/<int:Id_Usuario>", methods=["GET"])
 @login
 def obtener_recetas_favoritos(Id_Usuario):
-    con = con_pool.get_connection()
+    if not con.is_connected():
+        con.reconnect()
     cursor = con.cursor(dictionary=True)
 
     try:
@@ -398,12 +399,7 @@ def obtener_recetas_favoritos(Id_Usuario):
     finally:
         if cursor:
             cursor.close()
-        if con and con.is_connected():
-            con.close()
+        # opcional: no cerrar la conexión global si la vas a reutilizar
+        # con.close()
 
     return make_response(jsonify(registros))
-
-
-
-
-
