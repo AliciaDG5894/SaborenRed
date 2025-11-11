@@ -419,5 +419,3 @@ def obtenerIngredientes(id):
     con.close()
 
     return make_response(jsonify(ingredientes))
-
-
