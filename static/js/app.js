@@ -661,16 +661,45 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     }
 
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario")
-    console.log("Id_Usuario para recetas:", Id_Usuario)
     
-    if (Id_Usuario) {
-        RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
-            $scope.recetas = recetas
-            console.log($scope.recetas)
+    RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
+        const tbody = $("#recetasTbody")
+        tbody.empty()
+    
+        recetas.forEach(receta => {
+            const fila = `
+                <tr>
+                    <td>${receta.IdReceta}</td>
+                    <td>${receta.Nombre}</td>
+                    <td>${receta.Ingredientes}</td>
+                    <td>${receta.Calificacion || "Sin calificación"}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info btn-facade" data-id="${receta.IdReceta}">
+                            Ver Facade
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tbody.append(fila)
         })
-    } else {
-        console.error("⚠️ Id_Usuario no disponible")
-    }
+    
+        $(".btn-facade").click(function() {
+            const recetaId = $(this).data("id")
+    
+            RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
+                const receta = recetas.find(r => r.IdReceta == recetaId)
+                if(receta) {
+                    alert(`
+                        Receta: ${receta.Nombre}
+                        Ingredientes: ${receta.Ingredientes}
+                        Comentario: ${receta.Comentario || "Sin comentarios"}
+                        Calificación: ${receta.Calificacion || "Sin calificación"}
+                    `)
+                }
+            })
+        })
+    })
+
 
     // factory
     $.get("recetas/categorias", {
@@ -806,6 +835,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
