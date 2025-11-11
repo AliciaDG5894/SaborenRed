@@ -108,50 +108,6 @@ app.service("MensajesService", function() {
     this.modal = modal
 })
 
-
-app.service("RecetaAPI", function($q, $http) {
-    this.getReceta = function(id) {
-        var deferred = $q.defer()
-
-        $http.get("receta/" + id)
-            .then(function(response) {
-                deferred.resolve(response.data)
-            })
-            .catch(function(error) {
-                deferred.reject(error)
-            })
-
-        return deferred.promise
-    }
-})
-
-app.service("IngredientesAPI", function($q, $http) {
-    this.getIngredientes = function(idReceta) {
-        var deferred = $q.defer()
-
-        $http.get("receta/" + idReceta + "/ingredientes")
-            .then(function(response) {
-                deferred.resolve(response.data)
-            })
-            .catch(function(error) {
-                deferred.reject(error)
-            })
-
-        return deferred.promise
-    }
-})
-
-app.factory("RecetaFacade", function($q, RecetaAPI, IngredientesAPI) {
-    return {
-        obtenerRecetaCompleta: function(idReceta) {
-            return $q.all({
-                receta: RecetaAPI.getReceta(idReceta),
-                ingredientes: IngredientesAPI.getIngredientes(idReceta)
-            })
-        }
-    }
-})
-
 app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
@@ -658,20 +614,12 @@ app.config(function ($routeProvider, $locationProvider, $provide) {
     })
 })
 
-app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService, RecetaFacade) {
+app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService) {
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML)
         })
     }
-    
-    $(document).on("click", ".btn-ver", function() {
-        const id = $(this).data("id")
-        const scope = angular.element($("#appContent")).scope()
-        scope.$apply(function() {
-            scope.verReceta(id)
-        })
-    })
     
     buscarRecetas();
     
@@ -699,26 +647,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         $scope.categoriaDesayunos = categoriaDesayunos
 
     })
-
-    $scope.verReceta = function(id) {
-        RecetaFacade.obtenerRecetaCompleta(id).then(function(data) {
-            var r = data.receta
-            var html = "<b>Receta:</b> " + r.Nombre + "<br>" +
-                       "<b>Categoría:</b> " + r.Categorias + "<br>" +
-                       "<b>Descripción:</b> " + r.Descripcion + "<br><br>"
-
-            html += "<table class='table table-sm'><thead><tr>" +
-                    "<th>Ingrediente</th><th>Cantidad</th><th>Unidad</th></tr></thead><tbody>"
-
-            data.ingredientes.forEach(function(i) {
-                html += "<tr><td>" + i.NombreIngrediente + "</td><td>" + i.Cantidad + "</td><td>" + i.Unidad + "</td></tr>"
-            })
-
-            html += "</tbody></table>"
-            MensajesService.modal(html)
-        })
-    }
-
     
     // Pusher
     Pusher.logToConsole = true;
@@ -835,5 +763,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
