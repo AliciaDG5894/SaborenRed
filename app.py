@@ -375,7 +375,7 @@ def buscarCategorias():
 
     return make_response(jsonify(registros))
 
-@app.route("/recetas/<int:id_usuario>", methods=["GET"])
+@app.route("/recetas/<int:Id_Usuario>", methods=["GET"])
 @login
 def obtener_recetas_favoritos(id_usuario):
     con = con_pool.get_connection()
@@ -401,4 +401,5 @@ def obtener_recetas_favoritos(id_usuario):
             con.close()
 
     return make_response(jsonify(registros))
+
 
