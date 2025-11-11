@@ -662,8 +662,9 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
 
-    $(".btn-facade").click(function() {
+    $(document).on("click", ".btn-facade", function() {
         const recetaId = $(this).data("id")
+        const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario")
     
         RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
             const receta = recetas.find(r => r.IdReceta == recetaId)
@@ -675,8 +676,11 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
                     Calificación: ${receta.Calificacion || "Sin calificación"}
                 `)
             }
+        }).catch(function(error) {
+            console.error("Error al obtener recetas:", error)
         })
     })
+
 
 
     // factory
@@ -813,6 +817,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
