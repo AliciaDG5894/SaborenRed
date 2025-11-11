@@ -108,6 +108,29 @@ app.service("MensajesService", function() {
     this.modal = modal
 })
 
+app.service("RecetaAPI", function($q) {
+    this.obtenerRecetasConFavoritos = function(idUsuario) {
+        var deferred = $q.defer()
+        $.get(`/recetas/${idUsuario}`)
+        .done(function(data){
+            deferred.resolve(data)
+        })
+        .fail(function(error){
+            deferred.reject(error)
+        })
+        return deferred.promise
+    }
+})
+
+app.factory("RecetaFacade", function(RecetaAPI, $q) {
+    return {
+        obtenerRecetasUsuario: function(idUsuario) {
+            return RecetaAPI.obtenerRecetasConFavoritos(idUsuario)
+        }
+    }
+})
+
+
 app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
     $rootScope.slide             = ""
     $rootScope.spinnerGrow       = false
@@ -614,7 +637,7 @@ app.config(function ($routeProvider, $locationProvider, $provide) {
     })
 })
 
-app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService) {
+app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService, RecetaFacade) {
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML)
@@ -628,6 +651,12 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     $scope.mostrarUsuario = function () {
         console.log("Usuario actual:", SessionService.getUsr())
     }
+    
+    const idUsuario = SesionService.getUsr() // tu servicio de sesión
+    RecetaFacade.obtenerRecetasUsuario(idUsuario).then(function(recetas) {
+        $scope.recetas = recetas;  // ahora tienes todas las recetas y favoritos
+        console.log($scope.recetas)
+    })
 
     // factory
     $.get("recetas/categorias", {
@@ -763,6 +792,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
