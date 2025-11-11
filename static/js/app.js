@@ -663,22 +663,20 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
 
     $(".btn-facade").click(function() {
-            const recetaId = $(this).data("id");
+        const recetaId = $(this).data("id")
     
-            RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
-                const receta = recetas.find(r => r.IdReceta == recetaId);
-                if(receta) {
-                    alert(`
-                        Receta: ${receta.Nombre}
-                        Ingredientes: ${receta.Ingredientes}
-                        Comentario: ${receta.Comentario || "Sin comentarios"}
-                        Calificación: ${receta.Calificacion || "Sin calificación"}
-                    `);
-                }
-            });
-    });
-
-
+        RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
+            const receta = recetas.find(r => r.IdReceta == recetaId)
+            if(receta) {
+                alert(`
+                    Receta: ${receta.Nombre}
+                    Ingredientes: ${receta.Ingredientes}
+                    Comentario: ${receta.Comentario || "Sin comentarios"}
+                    Calificación: ${receta.Calificacion || "Sin calificación"}
+                `)
+            }
+        })
+    })
 
 
     // factory
@@ -815,6 +813,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
