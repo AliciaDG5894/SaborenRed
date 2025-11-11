@@ -661,50 +661,25 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     }
 
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
-
-    RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
-        const tbody = $("#recetasTbody");
-        tbody.empty();
     
-        recetas.forEach(receta => {
-            const fila = `
-                <tr>
-                    <td>${receta.IdReceta}</td>
-                    <td>${receta.Nombre}</td>
-                    <td>${receta.Descripcion}</td>
-                    <td>${receta.Ingredientes}</td>
-                    <td>${receta.Utensilios}</td>
-                    <td>${receta.Instrucciones}</td>
-                    <td>${receta.Nutrientes}</td>
-                    <td>${receta.Categorias}</td>
-                    <td>
-                        <button class="btn btn-sm btn-info btn-facade" data-id="${receta.IdReceta}">
-                            Ver Facade
-                        </button>
-                        <button class="btn btn-sm btn-danger btn-eliminar" data-id="{{ receta.IdReceta}}">Eliminar</button>
-                    </td>
-                </tr>
-            `;
-            tbody.append(fila);
-        });
+    $(document).on("click", ".btn-facade", function() {
+        const recetaId = $(this).data("id");
+        const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
     
-       $(".btn-facade").click(function() {
-            const recetaId = $(this).data("id");
-        
-            RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
-                const receta = recetas.find(r => r.IdReceta == recetaId);
-                if(receta) {
-                    const mensaje = `
-                        <b>Receta:</b> ${receta.Nombre}<br>
-                        <b>Ingredientes:</b> ${receta.Ingredientes}<br>
-                        <b>Comentario:</b> ${receta.Comentario || "Sin comentarios"}<br>
-                        <b>Calificación:</b> ${receta.Calificacion || "Sin calificación"}
-                    `;
-                    MensajesService.modal(mensaje);
-                }
-            });
+        RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
+            const receta = recetas.find(r => r.IdReceta == recetaId);
+            if(receta) {
+                const mensaje = `
+                    <b>Receta:</b> ${receta.Nombre}<br>
+                    <b>Ingredientes:</b> ${receta.Ingredientes}<br>
+                    <b>Comentario:</b> ${receta.Comentario || "Sin comentarios"}<br>
+                    <b>Calificación:</b> ${receta.Calificacion || "Sin calificación"}
+                `;
+                MensajesService.modal(mensaje);
+            }
         });
     });
+
 
 
     // factory
@@ -841,6 +816,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
