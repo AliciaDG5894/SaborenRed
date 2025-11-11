@@ -654,7 +654,8 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         console.log("Usuario actual:", SessionService.getUsr())
     }
     
-    const Id_Usuario = SessionService.getId()  // ⚡ número
+    const Id_Usuario = SessionService.getId()
+    console.log("Id_Usuario para recetas:", SessionService.getId())
     RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
         $scope.recetas = recetas
         console.log($scope.recetas)
@@ -794,6 +795,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
