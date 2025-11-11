@@ -664,7 +664,15 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             $("#recetasTbody").html(trsHTML)
         })
     }
-
+    
+    $(document).on("click", ".btn-ver", function() {
+        const id = $(this).data("id")
+        const scope = angular.element($("#appContent")).scope()
+        scope.$apply(function() {
+            scope.verReceta(id)
+        })
+    })
+    
     buscarRecetas();
     
     $scope.SessionService = SessionService
@@ -827,4 +835,5 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
