@@ -661,24 +661,24 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     }
 
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
+
+    $(".btn-facade").click(function() {
+            const recetaId = $(this).data("id");
     
-    $(document).on("click", ".btn-facade", function() {
-        const recetaId = $(this).data("id");
-        const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
-    
-        RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
-            const receta = recetas.find(r => r.IdReceta == recetaId);
-            if(receta) {
-                const mensaje = `
-                    <b>Receta:</b> ${receta.Nombre}<br>
-                    <b>Ingredientes:</b> ${receta.Ingredientes}<br>
-                    <b>Comentario:</b> ${receta.Comentario || "Sin comentarios"}<br>
-                    <b>Calificación:</b> ${receta.Calificacion || "Sin calificación"}
-                `;
-                MensajesService.modal(mensaje);
-            }
+            RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
+                const receta = recetas.find(r => r.IdReceta == recetaId);
+                if(receta) {
+                    alert(`
+                        Receta: ${receta.Nombre}
+                        Ingredientes: ${receta.Ingredientes}
+                        Comentario: ${receta.Comentario || "Sin comentarios"}
+                        Calificación: ${receta.Calificacion || "Sin calificación"}
+                    `);
+                }
+            });
         });
     });
+
 
 
 
@@ -816,6 +816,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
