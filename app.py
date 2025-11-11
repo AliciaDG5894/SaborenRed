@@ -391,7 +391,7 @@ def obtener_recetas_favoritos(Id_Usuario):
         ON r.IdReceta = f.IdReceta AND f.Id_Usuario = %s
         ORDER BY r.Nombre ASC
         """
-        val = (id_usuario,)
+        val = (Id_Usuario,)
         cursor.execute(sql, val)
         registros = cursor.fetchall()
     finally:
@@ -401,6 +401,7 @@ def obtener_recetas_favoritos(Id_Usuario):
             con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
