@@ -652,8 +652,8 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         console.log("Usuario actual:", SessionService.getUsr())
     }
     
-    const idUsuario = SessionService.getUsr() // tu servicio de sesión
-    RecetaFacade.obtenerRecetasUsuario(idUsuario).then(function(recetas) {
+    const Id_Usuario = SessionService.getUsr() // tu servicio de sesión
+    RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
         $scope.recetas = recetas;  // ahora tienes todas las recetas y favoritos
         console.log($scope.recetas)
     })
@@ -792,6 +792,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
