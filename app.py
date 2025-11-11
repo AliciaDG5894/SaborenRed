@@ -388,7 +388,7 @@ def obtener_recetas_favoritos(id_usuario):
                f.IdFavorito, f.Comentario, f.Calificacion, f.Fecha
         FROM Recetas r
         LEFT JOIN Favoritos f
-        ON r.IdReceta = f.IdReceta AND f.IdUsuario = %s
+        ON r.IdReceta = f.IdReceta AND f.Id_Usuario = %s
         ORDER BY r.Nombre ASC
         """
         val = (id_usuario,)
@@ -401,3 +401,4 @@ def obtener_recetas_favoritos(id_usuario):
             con.close()
 
     return make_response(jsonify(registros))
+
