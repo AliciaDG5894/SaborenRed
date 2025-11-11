@@ -9,10 +9,12 @@
     <td>{{ receta.Nutrientes }}</td>
     <td>{{ receta.Categorias }}</td>
     <td>
+        <button class="btn btn-sm btn-info btn-facade" data-id="${receta.IdReceta}">Ver Facade</button>
         <button class="btn btn-sm btn-danger btn-eliminar" data-id="{{ receta.IdReceta}}">Eliminar</button>
     <td>
 </tr>
 {% endfor %}
+
 
 
 
