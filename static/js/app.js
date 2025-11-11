@@ -688,18 +688,19 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             tbody.append(fila);
         });
     
-        $(".btn-facade").click(function() {
+       $(".btn-facade").click(function() {
             const recetaId = $(this).data("id");
-    
+        
             RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
                 const receta = recetas.find(r => r.IdReceta == recetaId);
                 if(receta) {
-                    alert(`
-                        Receta: ${receta.Nombre}
-                        Ingredientes: ${receta.Ingredientes}
-                        Comentario: ${receta.Comentario || "Sin comentarios"}
-                        Calificación: ${receta.Calificacion || "Sin calificación"}
-                    `);
+                    const mensaje = `
+                        <b>Receta:</b> ${receta.Nombre}<br>
+                        <b>Ingredientes:</b> ${receta.Ingredientes}<br>
+                        <b>Comentario:</b> ${receta.Comentario || "Sin comentarios"}<br>
+                        <b>Calificación:</b> ${receta.Calificacion || "Sin calificación"}
+                    `;
+                    MensajesService.modal(mensaje);
                 }
             });
         });
@@ -840,6 +841,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
