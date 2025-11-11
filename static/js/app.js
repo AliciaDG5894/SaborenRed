@@ -715,7 +715,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             Categorias: $("#txtCategoria").val()
 
         }, function(response){
-            MensajesService.modal("has guardado el producto.")
+            MensajesService.modal("Haz guardado una receta.")
             
             console.log("Receta guardada o actualizada correctamente");
             $("#frmRecetas")[0].reset();
@@ -763,60 +763,3 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
