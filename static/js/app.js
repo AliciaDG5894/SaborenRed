@@ -162,6 +162,12 @@ app.run(["$rootScope", "$location", "$timeout", "SessionService", function($root
     
     if (preferencias.tipo)  SessionService.setTipo(preferencias.tipo)
     if (preferencias.usr)   SessionService.setUsr(preferencias.usr)
+
+    const storedId = localStorage.getItem("Id_Usuario")
+    if (storedId) {
+        SessionService.setId(storedId)
+        console.log("SessionService Id cargado desde localStorage:", storedId)
+    }
     
 
 
@@ -607,6 +613,7 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
             localStorage.setItem("login", "1")
             localStorage.setItem("preferencias", JSON.stringify(respuesta[0]))
             localStorage.setItem("Id_Usuario", respuesta[0].Id_Usuario) 
+            
         
             // guardar nombre para las funciones que lo usan
             SessionService.setUsr(respuesta[0].Nombre_Usuario || "Desconocido")
@@ -655,10 +662,15 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario")
     console.log("Id_Usuario para recetas:", Id_Usuario)
-    RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
-        $scope.recetas = recetas
-        console.log($scope.recetas)
-    })
+    
+    if (Id_Usuario) {
+        RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
+            $scope.recetas = recetas
+            console.log($scope.recetas)
+        })
+    } else {
+        console.error("⚠️ Id_Usuario no disponible")
+    }
 
     // factory
     $.get("recetas/categorias", {
@@ -794,6 +806,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
