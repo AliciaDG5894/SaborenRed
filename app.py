@@ -131,6 +131,7 @@ def iniciarSesion():
         session["login"]      = True
         session["login-usr"]  = usuario["Nombre_Usuario"]
         session["login-tipo"] = usuario["Tipo_Usuario"]
+        session["login-id"]   = usuario["Id_Usuario"]
 
     return make_response(jsonify(registros))
 
@@ -401,6 +402,7 @@ def obtener_recetas_favoritos(Id_Usuario):
             con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
