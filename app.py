@@ -374,3 +374,30 @@ def buscarCategorias():
         con.close()
 
     return make_response(jsonify(registros))
+
+@app.route("/recetas/<int:id_usuario>", methods=["GET"])
+@login
+def obtener_recetas_favoritos(id_usuario):
+    con = con_pool.get_connection()
+    cursor = con.cursor(dictionary=True)
+
+    try:
+        sql = """
+        SELECT r.IdReceta, r.Nombre, r.Descripcion, r.Ingredientes, r.Utensilios,
+               r.Instrucciones, r.Nutrientes, r.Categorias,
+               f.IdFavorito, f.Comentario, f.Calificacion, f.Fecha
+        FROM Recetas r
+        LEFT JOIN Favoritos f
+        ON r.IdReceta = f.IdReceta AND f.IdUsuario = %s
+        ORDER BY r.Nombre ASC
+        """
+        val = (id_usuario,)
+        cursor.execute(sql, val)
+        registros = cursor.fetchall()
+    finally:
+        if cursor:
+            cursor.close()
+        if con and con.is_connected():
+            con.close()
+
+    return make_response(jsonify(registros))
