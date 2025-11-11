@@ -662,47 +662,48 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
 
-RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
-    const tbody = $("#recetasTbody");
-    tbody.empty();
-
-    recetas.forEach(receta => {
-        const fila = `
-            <tr>
-                <td>${receta.IdReceta}</td>
-                <td>${receta.Nombre}</td>
-                <td>${receta.Descripcion}</td>
-                <td>${receta.Ingredientes}</td>
-                <td>${receta.Utensilios}</td>
-                <td>${receta.Instrucciones}</td>
-                <td>${receta.Nutrientes}</td>
-                <td>${receta.Categorias}</td>
-                <td>
-                    <button class="btn btn-sm btn-info btn-facade" data-id="${receta.IdReceta}">
-                        Ver Facade
-                    </button>
-                </td>
-            </tr>
-        `;
-        tbody.append(fila);
-    });
-
-    $(".btn-facade").click(function() {
-        const recetaId = $(this).data("id");
-
-        RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
-            const receta = recetas.find(r => r.IdReceta == recetaId);
-            if(receta) {
-                alert(`
-                    Receta: ${receta.Nombre}
-                    Ingredientes: ${receta.Ingredientes}
-                    Comentario: ${receta.Comentario || "Sin comentarios"}
-                    Calificación: ${receta.Calificacion || "Sin calificación"}
-                `);
-            }
+    RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
+        const tbody = $("#recetasTbody");
+        tbody.empty();
+    
+        recetas.forEach(receta => {
+            const fila = `
+                <tr>
+                    <td>${receta.IdReceta}</td>
+                    <td>${receta.Nombre}</td>
+                    <td>${receta.Descripcion}</td>
+                    <td>${receta.Ingredientes}</td>
+                    <td>${receta.Utensilios}</td>
+                    <td>${receta.Instrucciones}</td>
+                    <td>${receta.Nutrientes}</td>
+                    <td>${receta.Categorias}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info btn-facade" data-id="${receta.IdReceta}">
+                            Ver Facade
+                        </button>
+                        <button class="btn btn-sm btn-danger btn-eliminar" data-id="{{ receta.IdReceta}}">Eliminar</button>
+                    </td>
+                </tr>
+            `;
+            tbody.append(fila);
+        });
+    
+        $(".btn-facade").click(function() {
+            const recetaId = $(this).data("id");
+    
+            RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
+                const receta = recetas.find(r => r.IdReceta == recetaId);
+                if(receta) {
+                    alert(`
+                        Receta: ${receta.Nombre}
+                        Ingredientes: ${receta.Ingredientes}
+                        Comentario: ${receta.Comentario || "Sin comentarios"}
+                        Calificación: ${receta.Calificacion || "Sin calificación"}
+                    `);
+                }
+            });
         });
     });
-});
 
 
     // factory
@@ -839,6 +840,7 @@ RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
