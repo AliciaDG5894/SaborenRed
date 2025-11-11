@@ -606,12 +606,11 @@ app.controller("loginCtrl", function ($scope, $http, $rootScope, SessionService)
         if (respuesta.length) {
             localStorage.setItem("login", "1")
             localStorage.setItem("preferencias", JSON.stringify(respuesta[0]))
+            localStorage.setItem("Id_Usuario", respuesta[0].Id_Usuario) 
         
             // guardar nombre para las funciones que lo usan
             SessionService.setUsr(respuesta[0].Nombre_Usuario || "Desconocido")
             SessionService.setTipo(respuesta[0].Tipo_Usuario || "Sin tipo")
-        
-            // guardar Id_Usuario para rutas /recetas/<int:Id_Usuario>
             SessionService.setId(respuesta[0].Id_Usuario)
         
             $("#frmInicioSesion").get(0).reset()
@@ -653,9 +652,9 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     $scope.mostrarUsuario = function () {
         console.log("Usuario actual:", SessionService.getUsr())
     }
-    
-    const Id_Usuario = SessionService.getId()
-    console.log("Id_Usuario para recetas:", SessionService.getId())
+
+    const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario")
+    console.log("Id_Usuario para recetas:", Id_Usuario)
     RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
         $scope.recetas = recetas
         console.log($scope.recetas)
@@ -795,6 +794,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
