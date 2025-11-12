@@ -413,7 +413,10 @@ def logRecetas():
     ahora               = datetime.datetime.now(tz)
     fechaHoraStr        = ahora.strftime("%Y-%m-%d %H:%M:%S")
 
-    with open("log-busquedas.txt", "a") as f: 
+    with open("log-busqueda.txt", "a") as f:
+        f.write(f"{actividad}\t{descripcion}\t{fechaHoraStr}\n")
+
+    with open("log-busquedas.txt") as f: 
         log = f.read()
 
     return log
