@@ -403,3 +403,17 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
+@app.route("/app/log", methods=["GET"])
+def logRecetas():
+    args                = request.args
+    actividad           = args["actividad"]
+    descripcion         = args["descripcion"]
+    tz                  = pytz.timezone("America/Matamoros")
+    ahora               = datetime.datetime.now(tz)
+    fechaHoraStr        = ahora.strftime("%Y-%m-%d %H:%M:%S")
+
+    with open("log-busquedas.txt", "a") as f: 
+        log = f.read()
+
+    return log
