@@ -826,29 +826,16 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     //     btnGuardar.text("Actualizar");
     //     btnGuardar.removeClass("btn-primary").addClass("btn-success");
     // });
+    $scope.$wath("busquea", function(newVal, oldVal) {
+        if (newVal != oldVal) {
+            $.get("log", {
+                actividad:"Busqueda de recetas 🔍",
+                descripcion: `Se realizo una busqueda de receta "${newVal}"`
+            })
+        }
+    })
 });
 
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
