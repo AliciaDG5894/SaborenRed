@@ -785,7 +785,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             .setNutrientes($scope.nutrientes)
             .setCategorias($scope.categorias)
             .build();
-
+        console.log(nuevaReceta);
         // Enviar al backend
         RecetaAPI.agregarReceta(nuevaReceta)
             .then(() => alert("Receta creada con éxito"))
@@ -909,6 +909,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
