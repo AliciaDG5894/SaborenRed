@@ -864,7 +864,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             console.log("Receta guardada o actualizada correctamente");
             $("#frmRecetas")[0].reset();
             $("#idReceta").val("");
-            buscarRentas(); 
+            buscarRecetas(); 
         }).fail(function(xhr){
             console.error("Error al guardar/actualizar receta:", xhr.responseText);
         });
@@ -909,6 +909,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
