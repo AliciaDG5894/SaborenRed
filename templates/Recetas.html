@@ -1,93 +1,97 @@
-<br>
-<div class="card">
-    <h3>Bienvenido, {{ ' {{ SessionService.getUsr() }} ' }}</h3>
+<div ng-controller="RecetaController">
+    <br>
+    <div class="card">
+        <h3>Bienvenido, {{ ' {{ SessionService.getUsr() }} ' }}</h3>
+    </div>
+    <br>
+    
+    <form id="frmRecetas" method="post" ng-submit="crearReceta()">
+        <input type="hidden" id="idReceta" name="idReceta">
+    
+        <div class="mb-1">
+            <label>Nombre</label>
+            <input type="text" class="form-control" ng-model="nombre" id="txtNombre" name="txtNombre">
+        </div>
+        <div class="mb-1">
+            <label>Descripcion</label>
+            <input type="text" class="form-control" ng-model="descripcion" id="txtDescripcion" name="txtDescripcion">
+        </div>
+        <div class="mb-1">
+            <label>Ingredientes</label>
+            <input type="text" class="form-control" ng-model="ingredientes" id="txtIngredientes" name="txtIngredientes">
+        </div>
+        <div class="mb-1">
+            <label>Utensilios</label>
+            <input type="text" class="form-control" ng-model="utensilios" id="txtUtensilios" name="txtUtensilios">
+        </div>
+        <div class="mb-1">
+            <label>Instrucciones</label>
+            <input type="text" class="form-control" ng-model="instrucciones" id="txtInstrucciones" name="txtInstrucciones">
+        </div>
+        <div class="mb-1">
+            <label>Nutrientes</label>
+            <input type="text" class="form-control" ng-model="nutrientes" id="txtNutrientes" name="txtNutrientes">
+        </div>
+        <div class="mb-1">
+            <label>Categoria</label>
+            <input type="text" class="form-control" ng-model="categorias" id="txtCategoria" name="txtCategoria">
+        </div>
+        <div class="mb-1 text-end">
+            <button class="btn btn-primary">Guardar</button>
+        </div>
+    </form>
+    
+    {% raw %}
+    <div ng-if="nuevaReceta">
+      <h3>Vista previa de la receta generada:</h3>
+      <pre>{{ nuevaReceta | json }}</pre>
+    </div>
+    {% endraw %}
+    
+    <h5>{{ "{{ categoriaRapida.titulo }}" }}</h5>
+    <div class="card text-bg-info mb-3" style="max-width: 18rem;" ng-repeat="receta in categoriaRapida.recetas ">
+        <div class="card-header">Receta</div>
+        <div class="card-body">
+            <h3 class="card-title">{{ "{{ receta.Nombre }} "}}</h3>
+            <p class="card-text"></p>
+        </div>
+    </div>
+    
+    <h5>{{ "{{ categoriaDesayunos.titulo }}" }}</h5>
+    <div class="card text-bg-info mb-3" style="max-width: 18rem;" ng-repeat="receta in  categoriaDesayunos.recetas ">
+        <div class="card-header">Receta</div>
+        <div class="card-body">
+            <h3 class="card-title">{{ "{{ receta.Nombre }} "}}</h3>
+            <p class="card-text"></p>
+        </div>
+    </div>
+    
+    <div class="mb-3 input-group">
+        <input type="text" class="form-control" id="txtBuscarReceta" placeholder="Buscar receta" >
+        <button class="btn btn-secondary" id="btnBuscarReceta" type="button">Buscar</button>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <thead class="table-active">
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th>Ingredientes</th>
+                    <th>Utensilios</th>
+                    <th>Instrucciones</th>
+                    <th>Nutrientes</th>
+                    <th>Categoria</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="recetasTbody"></tbody>
+        </table>
+    </div>
+
 </div>
-<br>
 
-<form id="frmRecetas" method="post" ng-submit="crearReceta()">
-    <input type="hidden" id="idReceta" name="idReceta">
-
-    <div class="mb-1">
-        <label>Nombre</label>
-        <input type="text" class="form-control" ng-model="nombre" id="txtNombre" name="txtNombre">
-    </div>
-    <div class="mb-1">
-        <label>Descripcion</label>
-        <input type="text" class="form-control" ng-model="descripcion" id="txtDescripcion" name="txtDescripcion">
-    </div>
-    <div class="mb-1">
-        <label>Ingredientes</label>
-        <input type="text" class="form-control" ng-model="ingredientes" id="txtIngredientes" name="txtIngredientes">
-    </div>
-    <div class="mb-1">
-        <label>Utensilios</label>
-        <input type="text" class="form-control" ng-model="utensilios" id="txtUtensilios" name="txtUtensilios">
-    </div>
-    <div class="mb-1">
-        <label>Instrucciones</label>
-        <input type="text" class="form-control" ng-model="instrucciones" id="txtInstrucciones" name="txtInstrucciones">
-    </div>
-    <div class="mb-1">
-        <label>Nutrientes</label>
-        <input type="text" class="form-control" ng-model="nutrientes" id="txtNutrientes" name="txtNutrientes">
-    </div>
-    <div class="mb-1">
-        <label>Categoria</label>
-        <input type="text" class="form-control" ng-model="categorias" id="txtCategoria" name="txtCategoria">
-    </div>
-    <div class="mb-1 text-end">
-        <button class="btn btn-primary">Guardar</button>
-    </div>
-</form>
-
-{% raw %}
-<div ng-if="nuevaReceta">
-  <h3>Vista previa de la receta generada:</h3>
-  <pre>{{ nuevaReceta | json }}</pre>
-</div>
-{% endraw %}
-
-<h5>{{ "{{ categoriaRapida.titulo }}" }}</h5>
-<div class="card text-bg-info mb-3" style="max-width: 18rem;" ng-repeat="receta in categoriaRapida.recetas ">
-    <div class="card-header">Receta</div>
-    <div class="card-body">
-        <h3 class="card-title">{{ "{{ receta.Nombre }} "}}</h3>
-        <p class="card-text"></p>
-    </div>
-</div>
-
-<h5>{{ "{{ categoriaDesayunos.titulo }}" }}</h5>
-<div class="card text-bg-info mb-3" style="max-width: 18rem;" ng-repeat="receta in  categoriaDesayunos.recetas ">
-    <div class="card-header">Receta</div>
-    <div class="card-body">
-        <h3 class="card-title">{{ "{{ receta.Nombre }} "}}</h3>
-        <p class="card-text"></p>
-    </div>
-</div>
-
-<div class="mb-3 input-group">
-    <input type="text" class="form-control" id="txtBuscarReceta" placeholder="Buscar receta" >
-    <button class="btn btn-secondary" id="btnBuscarReceta" type="button">Buscar</button>
-</div>
-
-<div class="table-responsive">
-    <table class="table table-sm">
-        <thead class="table-active">
-            <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Ingredientes</th>
-                <th>Utensilios</th>
-                <th>Instrucciones</th>
-                <th>Nutrientes</th>
-                <th>Categoria</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody id="recetasTbody"></tbody>
-    </table>
-</div>
 
 
 
