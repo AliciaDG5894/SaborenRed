@@ -787,9 +787,9 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             .build();
         console.log(nuevaReceta);
         // Enviar al backend
-        RecetaAPI.agregarReceta(nuevaReceta)
-            .then(() => alert("Receta creada con éxito"))
-            .catch(() => alert("Error al crear la receta"));
+        // RecetaAPI.agregarReceta(nuevaReceta)
+        //     .then(() => alert("Receta creada con éxito"))
+        //     .catch(() => alert("Error al crear la receta"));
     };
     
     // Pusher
@@ -909,6 +909,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
