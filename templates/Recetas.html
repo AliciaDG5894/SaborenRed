@@ -43,18 +43,32 @@
 
     {% raw %}
     <div>
-      <p>Nombre en vista: {{ nombre }}</p>
+      <p>Nombre: {{ nombre }}</p>
       <p>Objeto: {{ nuevaReceta.Nombre }}</p>
     </div>
     {% endraw %}
 
-    
     {% raw %}
-    <div ng-if="nuevaReceta">
-      <h3>Vista previa de la receta generada:</h3>
-      <pre>{{ nuevaReceta | json }}</pre>
+    <div>
+      <p>Descripcion: {{ descripcion }}</p>
+      <p>Objeto: {{ nuevaReceta.descripcion }}</p>
     </div>
     {% endraw %}
+
+    {% raw %}
+    <div>
+      <p>ingredientes: {{ ingredientes }}</p>
+      <p>Objeto: {{ nuevaReceta.ingredientes }}</p>
+    </div>
+    {% endraw %}
+
+    {% raw %}
+    <div>
+      <p>utensilios: {{ utensilios }}</p>
+      <p>Objeto: {{ nuevaReceta.utensilios }}</p>
+    </div>
+    {% endraw %}
+
     
     <h5>{{ "{{ categoriaRapida.titulo }}" }}</h5>
     <div class="card text-bg-info mb-3" style="max-width: 18rem;" ng-repeat="receta in categoriaRapida.recetas ">
@@ -99,6 +113,7 @@
     </div>
 
 </div>
+
 
 
 
