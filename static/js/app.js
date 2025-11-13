@@ -695,7 +695,7 @@ app.config(function ($routeProvider, $locationProvider, $provide) {
     })
 })
 
-app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService, RecetaFacade) {
+app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService, RecetaFacade, RecetaBuilder) {
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML)
@@ -909,6 +909,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
