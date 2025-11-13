@@ -44,7 +44,7 @@
     {% raw %}
     <div class="card mt-4" ng-if="nuevaReceta">
       <div class="card-header bg-success text-white">
-        Vista previa de tu receta (Builder)
+        Vista previa de tu receta
       </div>
       <div class="card-body">
         <h3 class="card-title mb-1">{{ nuevaReceta.Nombre }}</h3>
@@ -103,6 +103,62 @@
         <input type="text" class="form-control" id="txtBuscarReceta" placeholder="Buscar receta" >
         <button class="btn btn-secondary" id="btnBuscarReceta" type="button">Buscar</button>
     </div>
+
+    <div class="card p-3 mb-3">
+        <label class="fw-bold">Filtrar recomendaciones</label>
+    
+        <select class="form-select mb-2" ng-model="tipoFiltro">
+            <option value="">Seleccionar...</option>
+            <option value="categoria">Por categoría</option>
+            <option value="ingrediente">Por ingrediente</option>
+            <option value="rapidas">Recetas rápidas</option>
+        </select>
+    
+        <input type="text" class="form-control mb-2" 
+               placeholder="Valor (categoría o ingrediente)" 
+               ng-model="valorFiltro">
+    
+        <button class="btn btn-primary" ng-click="filtrar()">Aplicar filtro</button>
+    </div>
+    
+    <div class="card mt-3" ng-if="recetasFiltradas.length > 0">
+    <div class="card-header bg-primary text-white">
+        Resultados del filtro
+    </div>
+
+    <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered">
+                    <thead class="table-active">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Ingredientes</th>
+                            <th>Utensilios</th>
+                            <th>Instrucciones</th>
+                            <th>Nutrientes</th>
+                            <th>Categoría</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr ng-repeat="receta in recetasFiltradas">
+                            <td>{{ receta.IdReceta }}</td>
+                            <td>{{ receta.Nombre }}</td>
+                            <td>{{ receta.Descripcion }}</td>
+                            <td>{{ receta.Ingredientes }}</td>
+                            <td>{{ receta.Utensilios }}</td>
+                            <td>{{ receta.Instrucciones }}</td>
+                            <td>{{ receta.Nutrientes }}</td>
+                            <td>{{ receta.Categorias }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     
     <div class="table-responsive">
         <table class="table table-sm">
@@ -122,20 +178,4 @@
             <tbody id="recetasTbody"></tbody>
         </table>
     </div>
-
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
