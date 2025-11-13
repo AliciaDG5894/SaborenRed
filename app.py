@@ -151,22 +151,22 @@ def preferencias():
         "tipo": session.get("login-tipo", 2)
     }))
 
-# @app.route("/app/log", methods=["GET"])
-# def logProductos():
-#     args         = request.args
-#     actividad    = args["actividad"]
-#     descripcion  = args["descripcion"]
-#     tz           = pytz.timezone("America/Matamoros")
-#     ahora        = datetime.datetime.now(tz)
-#     fechaHoraStr = ahora.strftime("%Y-%m-%d %H:%M:%S")
+@app.route("/log", methods=["GET"])
+def logProductos():
+    args         = request.args
+    actividad    = args["actividad"]
+    descripcion  = args["descripcion"]
+    tz           = pytz.timezone("America/Matamoros")
+    ahora        = datetime.datetime.now(tz)
+    fechaHoraStr = ahora.strftime("%Y-%m-%d %H:%M:%S")
 
-#     with open("log-busquedas.txt", "a") as f:
-#         f.write(f"{actividad}\t{descripcion}\t{fechaHoraStr}\n")
+    with open("log-busquedas.txt", "a") as f:
+        f.write(f"{actividad}\t{descripcion}\t{fechaHoraStr}\n")
 
-#     with open("log-busquedas.txt") as f:
-#         log = f.read()
+    with open("log-busquedas.txt") as f:
+        log = f.read()
 
-#     return log
+    return log
 
 @app.route("/recetas")
 @login
@@ -419,5 +419,6 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
