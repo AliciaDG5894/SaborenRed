@@ -40,6 +40,14 @@
             <button class="btn btn-primary">Guardar</button>
         </div>
     </form>
+
+    {% raw %}
+    <div>
+      <p>Nombre en vista: {{ nombre }}</p>
+      <p>Objeto: {{ nuevaReceta.Nombre }}</p>
+    </div>
+    {% endraw %}
+
     
     {% raw %}
     <div ng-if="nuevaReceta">
@@ -91,6 +99,7 @@
     </div>
 
 </div>
+
 
 
 
