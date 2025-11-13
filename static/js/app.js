@@ -177,43 +177,6 @@ app.service("RecetaBuilder", function() {
     };
 });
 
-app.service("RecomendacionStrategy", function() {
-
-    this.porCategoria = function(recetas, categoria) {
-        return recetas.filter(r => r.Categorias === categoria);
-    };
-
-    this.porIngrediente = function(recetas, ingrediente) {
-        return recetas.filter(r =>
-            r.Ingredientes.toLowerCase().includes(ingrediente.toLowerCase())
-        );
-    };
-
-    this.rapidas = function(recetas) {
-        return recetas.filter(r => r.Categorias === "Rapida" || r.Categorias === "Rápida");
-    };
-
-});
-
-app.service("Recomendador", function(RecomendacionStrategy) {
-    let estrategiaActual = null;
-    this.setStrategy = function(nombre) {
-        estrategiaActual = nombre;
-    };
-    this.recomendar = function(recetas, valor = "") {
-        if (estrategiaActual === "categoria") {
-            return RecomendacionStrategy.porCategoria(recetas, valor);
-        }
-        if (estrategiaActual === "ingrediente") {
-            return RecomendacionStrategy.porIngrediente(recetas, valor);
-        }
-        if (estrategiaActual === "rapidas") {
-            return RecomendacionStrategy.rapidas(recetas);
-        }
-        return recetas; 
-    };
-});
-
 
 app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
     $rootScope.slide             = ""
@@ -731,7 +694,7 @@ app.config(function ($routeProvider, $locationProvider, $provide) {
     })
 })
 
-app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService, RecetaFacade, RecetaBuilder, Recomendador) {
+app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService, RecetaFacade, RecetaBuilder) {
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML)
@@ -740,14 +703,14 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     
     buscarRecetas();
 
-    // $scope.$wath("busqueda", function(newVal, oldVal) {
-    //     if (newVal != oldVal) {
-    //         $.get("log", {
-    //             actividad: "Busqueda de recetas 🔍",
-    //             descripcion: `Se realizo la busqueda de una receta "${newVal}"`
-    //         })
-    //     }
-    // })
+    $scope.$wath("busqueda", function(newVal, oldVal) {
+        if (newVal != oldVal) {
+            $.get("log", {
+                actividad: "Busqueda de recetas 🔍",
+                descripcion: `Se realizo la busqueda de una receta "${newVal}"`
+            })
+        }
+    })
     
     $scope.SessionService = SessionService
     $scope.nuevaReceta = null;
@@ -846,17 +809,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         }).fail(function(xhr){
             console.error("Error al guardar/actualizar receta:", xhr.responseText);
         });
-    };
-
-
-    $scope.filtrar = function() {
-
-        const tipo = $scope.tipoFiltro;
-        const valor = $scope.valorFiltro || "";
-    
-        Recomendador.setStrategy(tipo);
-    
-        $scope.recetasFiltradas = Recomendador.recomendar($scope.todoRecetas, valor);
     };
 
     
@@ -977,6 +929,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
