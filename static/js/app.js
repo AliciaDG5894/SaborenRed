@@ -654,14 +654,14 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     
     buscarRecetas();
 
-    $scope.$wath("busqueda", function(newVal, oldVal) {
-        if (newVal != oldVal) {
-            $.get("log", {
-                actividad: "Busqueda de recetas 🔍",
-                descripcion: `Se realizo la busqueda de una receta "${newVal}"`
-            })
-        }
-    })
+    // $scope.$wath("busqueda", function(newVal, oldVal) {
+    //     if (newVal != oldVal) {
+    //         $.get("log", {
+    //             actividad: "Busqueda de recetas 🔍",
+    //             descripcion: `Se realizo la busqueda de una receta "${newVal}"`
+    //         })
+    //     }
+    // })
     
     $scope.SessionService = SessionService
     
@@ -842,4 +842,5 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
