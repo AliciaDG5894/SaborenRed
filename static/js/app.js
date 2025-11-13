@@ -128,6 +128,56 @@ app.factory("RecetaFacade", function(RecetaAPI, $q) {
     }
 })
 
+// RecetaBuilder.js
+app.service("RecetaBuilder", function() {
+    let receta = {};
+
+    this.reset = function() {
+        receta = {};
+        return this;
+    };
+    
+    this.setNombre = function(nombre) {
+        receta.Nombre = nombre;
+        return this;
+    };
+
+    this.setDescripcion = function(descripcion) {
+        receta.Descripcion = descripcion;
+        return this;
+    };
+
+    this.setIngredientes = function(ingredientes) {
+        receta.Ingredientes = ingredientes;
+        return this;
+    };
+
+    this.setUtensilios = function(utensilios) {
+        receta.Utensilio = utensilios;
+        return this;
+    };
+
+    this.setInstrucciones = function(instrucciones) {
+        receta.Instrucciones = instrucciones;
+        return this;
+    };
+
+    this.setNutrientes = function(nutrientes) {
+        receta.Nutrientes  = nutrientes ;
+        return this;
+    };
+
+    this.setCategorias = function(categorias) {
+        receta.Categorias = categorias;
+        return this;
+    };
+
+    this.build = function() {
+        return angular.copy(receta); // devuelve un clon del objeto receta final
+    };
+});
+
+
 
 app.run(["$rootScope", "$location", "$timeout", "SessionService", function($rootScope, $location, $timeout, SessionService) {
     $rootScope.slide             = ""
@@ -725,6 +775,23 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     })
     
+    $scope.crearReceta = function() {
+        const nuevaReceta = RecetaBuilder.reset()
+            .setNombre($scope.nombre)
+            .setDescripcion($scope.descripcion)
+            .setIngredientes($scope.ingredientes)
+            .setUtensilios($scope.utensilios)
+            .setInstrucciones($scope.instrucciones)
+            .setNutrientes($scope.nutrientes)
+            .setCategorias($scope.categorias)
+            .build();
+
+        // Enviar al backend
+        RecetaAPI.agregarReceta(nuevaReceta)
+            .then(() => alert("Receta creada con éxito"))
+            .catch(() => alert("Error al crear la receta"));
+    };
+    
     // Pusher
     Pusher.logToConsole = true;
     var pusher = new Pusher('b51b00ad61c8006b2e6f', {
@@ -842,5 +909,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
