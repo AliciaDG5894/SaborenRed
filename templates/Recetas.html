@@ -40,10 +40,12 @@
     </div>
 </form>
 
+{% raw %}
 <div ng-if="nuevaReceta">
   <h3>Vista previa de la receta generada:</h3>
   <pre>{{ nuevaReceta | json }}</pre>
 </div>
+{% endraw %}
 
 <h5>{{ "{{ categoriaRapida.titulo }}" }}</h5>
 <div class="card text-bg-info mb-3" style="max-width: 18rem;" ng-repeat="receta in categoriaRapida.recetas ">
@@ -86,6 +88,7 @@
         <tbody id="recetasTbody"></tbody>
     </table>
 </div>
+
 
 
 
