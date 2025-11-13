@@ -703,7 +703,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     
     buscarRecetas();
 
-    $scope.$wath("busqueda", function(newVal, oldVal) {
+    $scope.$watch("busqueda", function(newVal, oldVal) {
         if (newVal != oldVal) {
             $.get("log", {
                 actividad: "Busqueda de recetas 🔍",
@@ -926,16 +926,3 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
