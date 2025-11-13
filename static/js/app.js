@@ -714,7 +714,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     
     $scope.SessionService = SessionService
     $scope.nuevaReceta = null;
-    $scope.recetasFiltradas = [];
     
     $scope.mostrarUsuario = function () {
         console.log("Usuario actual:", SessionService.getUsr())
@@ -723,8 +722,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
 
     RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) { 
-        $scope.todoRecetas = [];
-        $scope.recetasFiltradas = [];
         const tbody = $("#recetasTbody"); 
         tbody.empty(); 
     
@@ -929,6 +926,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
