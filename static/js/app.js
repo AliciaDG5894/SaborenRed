@@ -714,6 +714,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     // })
     
     $scope.SessionService = SessionService
+    $scope.nuevaReceta = null;
     
     $scope.mostrarUsuario = function () {
         console.log("Usuario actual:", SessionService.getUsr())
@@ -776,7 +777,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     })
     
     $scope.crearReceta = function() {
-        const nuevaReceta = RecetaBuilder.reset()
+        $scope.nuevaReceta = RecetaBuilder.reset()
             .setNombre($scope.nombre)
             .setDescripcion($scope.descripcion)
             .setIngredientes($scope.ingredientes)
@@ -785,13 +786,29 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             .setNutrientes($scope.nutrientes)
             .setCategorias($scope.categorias)
             .build();
-        console.log(nuevaReceta);
-        // Enviar al backend
-        // RecetaAPI.agregarReceta(nuevaReceta)
-        //     .then(() => alert("Receta creada con éxito"))
-        //     .catch(() => alert("Error al crear la receta"));
-    };
     
+        console.log("Receta construida con Builder:", $scope.nuevaReceta);
+    
+        // Aquí sigue tu post al backend si quieres
+        $.post("/recetas", {
+            IdReceta: $("#idReceta").val(),
+            Nombre: $("#txtNombre").val(),
+            Descripcion: $("#txtDescripcion").val(),
+            Ingredientes: $("#txtIngredientes").val(),
+            Utensilios: $("#txtUtensilios").val(),
+            Instrucciones: $("#txtInstrucciones").val(),
+            Nutrientes: $("#txtNutrientes").val(),
+            Categorias: $("#txtCategoria").val()
+        }, function(response){
+            MensajesService.modal("Haz guardado una receta.")
+            $("#frmRecetas")[0].reset();
+            $("#idReceta").val("");
+            buscarRecetas(); 
+        }).fail(function(xhr){
+            console.error("Error al guardar/actualizar receta:", xhr.responseText);
+        });
+    };
+
     // Pusher
     Pusher.logToConsole = true;
     var pusher = new Pusher('b51b00ad61c8006b2e6f', {
@@ -909,6 +926,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
