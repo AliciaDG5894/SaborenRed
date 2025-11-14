@@ -152,21 +152,28 @@ def preferencias():
     }))
 
 @app.route("/log", methods=["GET"])
-def logProductos():
+def logRecetas():
     args         = request.args
-    actividad    = args["actividad"]
-    descripcion  = args["descripcion"]
+    actividad    = args.get("actividad")
+    descripcion  = args.get("descripcion")
     tz           = pytz.timezone("America/Matamoros")
     ahora        = datetime.datetime.now(tz)
     fechaHoraStr = ahora.strftime("%Y-%m-%d %H:%M:%S")
 
-    with open("log-busquedas.txt", "a") as f:
-        f.write(f"{actividad}\t{descripcion}\t{fechaHoraStr}\n")
+    # Si vienen actividad y descripcion, escribe en el log
+    if actividad and descripcion:
+        with open("log-busquedas.txt", "a", encoding="utf-8") as f:
+            f.write(f"{actividad}\t{descripcion}\t{fechaHoraStr}\n")
 
-    with open("log-busquedas.txt") as f:
-        log = f.read()
+    # Siempre intenta leer el log (aunque no haya nada nuevo que escribir)
+    try:
+        with open("log-busquedas.txt", encoding="utf-8") as f:
+            log = f.read()
+    except FileNotFoundError:
+        log = ""
 
     return log
+
 
 @app.route("/recetas")
 @login
@@ -419,6 +426,7 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
