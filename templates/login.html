@@ -1,32 +1,75 @@
-<div class="row">
-    <div class="col-sm-1 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
-    </div>
 
-    <div class="col-sm-10 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
-        <form method="post" id="frmInicioSesion">
-            <div class="mb-2">
-                <label for="usuario">Usuario:</label>
-                <input type="text" id="usuario" name="usuario" class="form-control form-control-lg while-waiting" autocomplete="username" spellcheck="false" required autofocus>
-            </div>
-            <div class="mb-2">
-                <label for="contrasena">Contraseña:</label>
-                <div class="input-group">
-                    <input type="password" id="contrasena" name="contrasena" class="form-control form-control-lg while-waiting" autocomplete="current-password" minlength="5" maxlength="20" aria-describedby="basic-addon1" required>
-                    <span class="input-group-text toggle-password bg-body" id="basic-addon1" style="font-size: 1.25em; cursor: pointer;"><i class="bi bi-eye"></i></span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InicioSesion</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container-fluid login-page">
+        <div class="row h-100">
+            <!-- Columna IZQUIERDA: fotos + logo -->
+            <div class="col-lg-7 d-none d-lg-block p-0 login-left">
+                <!-- usa aquí tu collage ya hecho -->
+                <img src="img/bread-1836411_1280.jpg" class="img-fluid w-100 h-100 object-fit-cover" alt="Comida Sabor en Red">
+
+                <!-- Logo sobre las fotos -->
+                <div class="login-brand">
+                    <div class="login-icon-circle">
+                        <img src="img/icono.png" alt="Sabor en Red" class="login-icon">
+                    </div>
+                    <span class="login-brand-text">Sabor en Red</span>
                 </div>
             </div>
-            <div class="mb-2 text-end">
-                <button class="btn btn-primary btn-lg while-waiting">
-                    <i class="bi bi-box-arrow-right" style="font-size: 1.25em;"></i>
-                    Iniciar Sesión
-                </button>
+
+            <!-- Columna DERECHA: formulario -->
+            <div class="col-12 col-lg-5 login-right d-flex align-items-center">
+                <div class="w-100 px-4 px-lg-5">
+
+                    <h2 class="login-title mb-4 text-center text-lg-start">Iniciar Sesión</h2>
+
+                    <form method="post" id="frmInicioSesion">
+                        <div class="mb-3">
+                            <!-- puedes ocultar el label si no lo quieres -->
+                            <!-- <label for="usuario" class="form-label">Usuario</label> -->
+                            <input type="text" id="usuario" name="usuario"
+                                class="form-control form-control-lg while-waiting login-input"
+                                placeholder="Usuario"
+                                autocomplete="username" spellcheck="false" required autofocus>
+                        </div>
+
+                        <div class="mb-3">
+                            <!-- <label for="contrasena" class="form-label">Contraseña</label> -->
+                            <div class="input-group">
+                                <input type="password" id="contrasena" name="contrasena"
+                                    class="form-control form-control-lg while-waiting login-input"
+                                    placeholder="Contraseña"
+                                    autocomplete="current-password"
+                                    minlength="5" maxlength="20"
+                                    aria-describedby="basic-addon1" required>
+
+                                <span class="input-group-text toggle-password bg-body login-eye" id="basic-addon1"
+                                    style="cursor: pointer;">
+                                    <i class="bi bi-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="mb-2 text-center text-lg-start">
+                            <button class="btn btn-primary btn-lg while-waiting login-btn">
+                                Iniciar
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="div-inicio-sesion"></div>
+                </div>
             </div>
-        </form>
-        <div class="div-inicio-sesion"></div>
+        </div>
     </div>
 
-    <div class="col-sm-1 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
-    </div>
-</div>
-
-<div class="div-to-complete-screen"></div>
+    <div class="div-to-complete-screen"></div>
+</body>
+</html>
