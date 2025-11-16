@@ -4,24 +4,23 @@
     background-color: #fdf7ee; /* cremita */
 }
 
-/* Columna izquierda (fotos) */
 .login-left {
-    position: relative;
     height: 100vh;
-    overflow: hidden;
+    position: relative;
 }
 
 .login-left img {
-    height: 100%;
     width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
-/* Logo sobre las fotos */
+
 .login-brand {
     position: absolute;
     left: 40px;
-    bottom: 40px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -120,3 +119,4 @@
         display: none; /* ocultar logo sobre fotos en móvil si quieres */
     }
 }
+
