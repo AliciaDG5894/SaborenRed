@@ -1,0 +1,119 @@
+/* Toda la página de login */
+.login-page {
+    min-height: 100vh;
+    background-color: #fdf7ee; /* cremita */
+}
+
+/* Columna izquierda (fotos) */
+.login-left {
+    position: relative;
+    overflow: hidden;
+}
+
+.login-left img {
+    height: 100%;
+}
+
+/* Logo sobre las fotos */
+.login-brand {
+    position: absolute;
+    left: 40px;
+    bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.login-icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-icon {
+    width: 42px;
+    height: 42px;
+}
+
+.login-brand-text {
+    font-family: "Georgia", "Times New Roman", serif;  /* o la que uses */
+    font-size: 2rem;
+    font-weight: 600;
+    color: #0f5b33;
+}
+
+/* Columna derecha (formulario) */
+.login-right {
+    background-color: #fdf7ee; /* mismo fondo cremita */
+    position: relative;
+}
+
+/* Franja verde del lado derecho */
+.login-right::after {
+    content: "";
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 18px;              /* ajusta el grosor */
+    height: 100vh;
+    background-color: #1f6f3f;
+}
+
+/* Título */
+.login-title {
+    font-weight: 700;
+    color: #111;
+}
+
+/* Inputs redondos y verdes */
+.login-input {
+    border-radius: 999px;
+    border: none;
+    background-color: #1f6f3f;
+    color: #ffffff;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.login-input::placeholder {
+    color: #e6f3ec;
+}
+
+.login-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(31, 111, 63, 0.3);
+    outline: none;
+}
+
+/* Icono del ojo pegado al input */
+.login-eye {
+    border-radius: 0 999px 999px 0;
+    border: none;
+}
+
+/* Botón iniciar */
+.login-btn {
+    border-radius: 999px;
+    background-color: #1f6f3f;
+    border-color: #1f6f3f;
+    padding-inline: 60px;
+}
+
+.login-btn:hover {
+    background-color: #185733;
+    border-color: #185733;
+}
+
+/* Responsivo: en móvil que se vea solo el formulario y sin franja fija muy gruesa */
+@media (max-width: 991.98px) {
+    .login-right::after {
+        width: 10px;
+    }
+
+    .login-brand {
+        display: none; /* ocultar logo sobre fotos en móvil si quieres */
+    }
+}
