@@ -45,7 +45,7 @@
     font-family: "Georgia", "Times New Roman", serif;  /* o la que uses */
     font-size: 2rem;
     font-weight: 600;
-    color: #0f5b33;
+    color: #ffffff;
 }
 
 /* Columna derecha (formulario) */
@@ -119,4 +119,5 @@
         display: none; /* ocultar logo sobre fotos en móvil si quieres */
     }
 }
+
 
