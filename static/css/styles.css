@@ -7,11 +7,14 @@
 /* Columna izquierda (fotos) */
 .login-left {
     position: relative;
+    height: 100vh;
     overflow: hidden;
 }
 
 .login-left img {
     height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 /* Logo sobre las fotos */
