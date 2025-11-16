@@ -3,12 +3,12 @@
         <!-- Columna IZQUIERDA: fotos + logo -->
         <div class="col-lg-7 d-none d-lg-block p-0 login-left">
             <!-- usa aquí tu collage ya hecho -->
-            <img src="img/bread-1836411_1280.jpg" class="img-fluid w-100 h-100 object-fit-cover" alt="Comida Sabor en Red">
+            <img src="{{ url_for('static', filename='img/collagIS.png') }}" class="img-fluid w-100 h-100 object-fit-cover" alt="Comida Sabor en Red">
 
             <!-- Logo sobre las fotos -->
             <div class="login-brand">
                 <div class="login-icon-circle">
-                    <img src="img/icono.png" alt="Sabor en Red" class="login-icon">
+                    <img src="{{ url_for('static', filename='img/icono.png') }}" alt="Sabor en Red" class="login-icon">
                 </div>
                 <span class="login-brand-text">Sabor en Red</span>
             </div>
