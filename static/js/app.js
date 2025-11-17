@@ -744,7 +744,8 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     });
 
 // BUILDER
-    $scope.crearReceta = function() {
+   $scope.crearReceta = function() {
+        // 1) Builder solo para la vista previa
         $scope.nuevaReceta = RecetaBuilder.reset()
             .setNombre($scope.nombre)
             .setDescripcion($scope.descripcion)
@@ -753,30 +754,36 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             .setInstrucciones($scope.instrucciones)
             .setNutrientes($scope.nutrientes)
             .setCategorias($scope.categorias)
-            .setImagen($scope.imagen)
             .build();
-
+    
         console.log("Receta construida con Builder:", $scope.nuevaReceta);
-
-        $.post("/recetas", {
-            IdReceta: $("#idReceta").val(),
-            Nombre: $("#txtNombre").val(),
-            Descripcion: $("#txtDescripcion").val(),
-            Ingredientes: $("#txtIngredientes").val(),
-            Utensilios: $("#txtUtensilios").val(),
-            Instrucciones: $("#txtInstrucciones").val(),
-            Nutrientes: $("#txtNutrientes").val(),
-            Categorias: $("#txtCategoria").val(),
-            Imagen: $("#txtImagen").val()
-        }, function(response){
-            MensajesService.modal("Has guardado una receta.");
-            $("#frmRecetas")[0].reset();
-            $("#idReceta").val("");
-            buscarRecetas(); 
-        }).fail(function(xhr){
-            console.error("Error al guardar/actualizar receta:", xhr.responseText);
+    
+        // 2) Armamos FormData a partir del formulario
+        const form = document.getElementById("frmRecetas");
+        const formData = new FormData(form);
+    
+        // si quieres, agregas IdReceta manual (hidden input ya lo tiene)
+        // formData.append("IdReceta", $("#idReceta").val());
+    
+        // 3) Enviar por AJAX como multipart/form-data
+        $.ajax({
+            url: "/recetas",
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                MensajesService.modal("Has guardado una receta.");
+                $("#frmRecetas")[0].reset();
+                $("#idReceta").val("");
+                buscarRecetas();
+            },
+            error: function(xhr) {
+                console.error("Error al guardar/actualizar receta:", xhr.responseText);
+            }
         });
     };
+
 
 // FACADE
     $(document).on("click", ".btn-facade", function () {
@@ -875,6 +882,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
