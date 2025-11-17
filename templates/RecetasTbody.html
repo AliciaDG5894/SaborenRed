@@ -8,6 +8,7 @@
     <td>{{ receta.Instrucciones }}</td>
     <td>{{ receta.Nutrientes }}</td>
     <td>{{ receta.Categorias }}</td>
+    <td>{{ receta.Imagen }}</td>
     <td>
         <button class="btn btn-sm btn-info btn-facade" data-id="{{ receta.IdReceta }}">Ingredientes</button>
         {% if session.get("login-tipo") == 1 %}
@@ -16,4 +17,5 @@
     <td>
 </tr>
 {% endfor %}
+
 
