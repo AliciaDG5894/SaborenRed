@@ -709,7 +709,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     buscarRecetas();
 
 // IMAGEN
-    $scope.defaultRecetaImg = "{{ url_for('static', filename='img/collagIS.png') }}";
+    $scope.defaultRecetaImg = "/static/img/collagIS.png";
     
 // LOG
     $scope.$watch("busqueda", function(newVal, oldVal) {
@@ -875,6 +875,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
