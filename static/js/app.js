@@ -744,8 +744,8 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     });
 
 // BUILDER
-   $scope.crearReceta = function() {
-        // 1) Builder solo para la vista previa
+    $scope.crearReceta = function() {
+        // 1) Builder solo para la vista previa (usa ng-model)
         $scope.nuevaReceta = RecetaBuilder.reset()
             .setNombre($scope.nombre)
             .setDescripcion($scope.descripcion)
@@ -758,31 +758,42 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     
         console.log("Receta construida con Builder:", $scope.nuevaReceta);
     
-        // 2) Armamos FormData a partir del formulario
-        const form = document.getElementById("frmRecetas");
-        const formData = new FormData(form);
+        // 2) Construir FormData con los NOMBRES que espera Flask
+        const formData = new FormData();
+        formData.append("IdReceta", $("#idReceta").val() || "");
+        formData.append("Nombre", $("#txtNombre").val());
+        formData.append("Descripcion", $("#txtDescripcion").val());
+        formData.append("Ingredientes", $("#txtIngredientes").val());
+        formData.append("Utensilios", $("#txtUtensilios").val());
+        formData.append("Instrucciones", $("#txtInstrucciones").val());
+        formData.append("Nutrientes", $("#txtNutrientes").val());
+        formData.append("Categorias", $("#txtCategoria").val());
     
-        // si quieres, agregas IdReceta manual (hidden input ya lo tiene)
-        // formData.append("IdReceta", $("#idReceta").val());
+        // 3) Archivo de imagen
+        const fileInput = document.getElementById("txtImagen");
+        if (fileInput && fileInput.files && fileInput.files.length > 0) {
+            formData.append("Imagen", fileInput.files[0]);  // 👈 este es el `file`
+        }
     
-        // 3) Enviar por AJAX como multipart/form-data
+        // 4) Enviar AJAX como multipart/form-data
         $.ajax({
             url: "/recetas",
             method: "POST",
             data: formData,
-            processData: false,
-            contentType: false,
+            processData: false,   // no procesar los datos
+            contentType: false,   // dejar que el navegador ponga el boundary
             success: function(response) {
                 MensajesService.modal("Has guardado una receta.");
                 $("#frmRecetas")[0].reset();
                 $("#idReceta").val("");
-                buscarRecetas();
+                buscarRecetas(); 
             },
             error: function(xhr) {
                 console.error("Error al guardar/actualizar receta:", xhr.responseText);
             }
         });
     };
+
 
 
 // FACADE
@@ -882,6 +893,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
