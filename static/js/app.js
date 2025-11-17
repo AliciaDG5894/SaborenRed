@@ -153,7 +153,7 @@ app.service("RecetaBuilder", function() {
     };
 
     this.setUtensilios = function(utensilios) {
-        receta.Utensilio = utensilios;
+        receta.Utensilios = utensilios;
         return this;
     };
 
@@ -740,6 +740,31 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         $scope.categoriaDesayunos = categoriaDesayunos;
     });
 
+    $.get("recetas/categorias", { categoria: "Comidas" }, function (comidas) {
+        const categoriaComidas = CategoriaFactory.create("Comidas", comidas);
+        console.log("Comidas  FACTORY", categoriaComidas.getInfo());
+        $scope.categoriaComidas = categoriaComidas;
+    });
+
+    $.get("recetas/categorias", { categoria: "Cenas" }, function (cenas) {
+        const categoriaCenas = CategoriaFactory.create("Cenas", cenas);
+        console.log("Comida cena FACTORY", categoriaCenas.getInfo());
+        $scope.categoriaCenas = categoriaCenas;
+    });
+    
+    $.get("recetas/categorias", { categoria: "Postres" }, function (postres) {
+        const categoriaPostres = CategoriaFactory.create("Postres", postres);
+        console.log("Comida postre FACTORY", categoriaPostres.getInfo());
+        $scope.categoriaPostres = categoriaPostres;
+    });
+
+    $.get("recetas/categorias", { categoria: "Saludable" }, function (saludable) {
+        const categoriaSaludable = CategoriaFactory.create("Saludable", saludable);
+        console.log("Comida saludable FACTORY", categoriaSaludable.getInfo());
+        $scope.categoriaSaludable = categoriaSaludable;
+    });
+
+
 // BUILDER
     $scope.crearReceta = function() {
         $scope.nuevaReceta = RecetaBuilder.reset()
@@ -750,27 +775,69 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             .setInstrucciones($scope.instrucciones)
             .setNutrientes($scope.nutrientes)
             .setCategorias($scope.categorias)
+            .setImagen($scope.imagen)
             .build();
 
         console.log("Receta construida con Builder:", $scope.nuevaReceta);
 
-        $.post("/recetas", {
-            IdReceta: $("#idReceta").val(),
-            Nombre: $("#txtNombre").val(),
-            Descripcion: $("#txtDescripcion").val(),
-            Ingredientes: $("#txtIngredientes").val(),
-            Utensilios: $("#txtUtensilios").val(),
-            Instrucciones: $("#txtInstrucciones").val(),
-            Nutrientes: $("#txtNutrientes").val(),
-            Categorias: $("#txtCategoria").val()
-        }, function(response){
-            MensajesService.modal("Has guardado una receta.");
-            $("#frmRecetas")[0].reset();
-            $("#idReceta").val("");
-            buscarRecetas(); 
-        }).fail(function(xhr){
-            console.error("Error al guardar/actualizar receta:", xhr.responseText);
+        var formData = new FormData();
+
+        formData.append("IdReceta", $("#idReceta").val());
+        formData.append("Nombre", $("#txtNombre").val());
+        formData.append("Descripcion", $("#txtDescripcion").val());
+        formData.append("Ingredientes", $("#txtIngredientes").val());
+        formData.append("Utensilios", $("#txtUtensilios").val());
+        formData.append("Instrucciones", $("#txtInstrucciones").val());
+        formData.append("Nutrientes", $("#txtNutrientes").val());
+        formData.append("Categorias", $("#txtCategoria").val());
+        formData.append("Imagen", $("#txtImagen").val()); // texto opcional
+
+        var fileInput = document.getElementById("fileImagen");
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+            formData.append("fileImagen", fileInput.files[0]);
+        }
+    
+        $.ajax({
+            url: "/recetas",
+            type: "POST",
+            data: formData,
+            processData: false,   // no convertir a querystring
+            contentType: false,   // dejar que el navegador ponga el boundary del multipart
+            success: function(response) {
+                MensajesService.modal("Has guardado una receta.");
+                $("#frmRecetas")[0].reset();
+                $("#idReceta").val("");
+    
+                $scope.$apply(function () {
+                    $scope.nuevaReceta = null;
+                    $scope.imagen = null;
+                });
+    
+                buscarRecetas(); 
+            },
+            error: function(xhr) {
+                console.error("Error al guardar/actualizar receta:", xhr.responseText);
+                MensajesService.modal("Ocurrió un error al guardar la receta.");
+            }
         });
+        
+        // $.post("/recetas", {
+        //     IdReceta: $("#idReceta").val(),
+        //     Nombre: $("#txtNombre").val(),
+        //     Descripcion: $("#txtDescripcion").val(),
+        //     Ingredientes: $("#txtIngredientes").val(),
+        //     Utensilios: $("#txtUtensilios").val(),
+        //     Instrucciones: $("#txtInstrucciones").val(),
+        //     Nutrientes: $("#txtNutrientes").val(),
+        //     Categorias: $("#txtCategoria").val()
+        // }, function(response){
+        //     MensajesService.modal("Has guardado una receta.");
+        //     $("#frmRecetas")[0].reset();
+        //     $("#idReceta").val("");
+        //     buscarRecetas(); 
+        // }).fail(function(xhr){
+        //     console.error("Error al guardar/actualizar receta:", xhr.responseText);
+        // });
     };
 
 // FACADE
@@ -868,6 +935,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
