@@ -1,140 +1,254 @@
-<div ng-controller="recetasCtrl">
-    <br>
-    <div class="card">
-        <h3>Bienvenido, {{ ' {{ SessionService.getUsr() }} ' }}</h3>
+<div ng-controller="recetasCtrl" class="container my-3">
+
+    <!-- HEADER COMÚN -->
+    <div class="card mb-3">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-2">
+                <span class="fs-4 fw-bold">Sabor en Red</span>
+            </div>
+            <div class="text-end">
+                <div>Bienvenido, {{ ' {{ SessionService.getUsr() }} ' }}</div>
+                <small class="text-muted">
+                    Tipo:
+                    {{ ' {{ SessionService.getTipo() == 1 ? "Administrador" : "Usuario" }} ' }}
+                </small>
+            </div>
+        </div>
     </div>
-    <br>
+
+    <!-- =======================================================
+         VISTA ADMIN (Tipo_Usuario = 1) - puede crear / eliminar
+         ======================================================= -->
+    <section ng-if="SessionService.getTipo() == 1">
+
+        <!-- FORMULARIO -->
+        <form id="frmRecetas" method="post" ng-submit="crearReceta()">
+            <input type="hidden" id="idReceta" name="idReceta">
+        
+            <div class="mb-1">
+                <label>Nombre</label>
+                <input type="text" class="form-control" ng-model="nombre" id="txtNombre" name="txtNombre" required>
+            </div>
+            <div class="mb-1">
+                <label>Descripción</label>
+                <input type="text" class="form-control" ng-model="descripcion" id="txtDescripcion" name="txtDescripcion" required>
+            </div>
+            <div class="mb-1">
+                <label>Ingredientes</label>
+                <input type="text" class="form-control" ng-model="ingredientes" id="txtIngredientes" name="txtIngredientes" required>
+            </div>
+            <div class="mb-1">
+                <label>Utensilios</label>
+                <input type="text" class="form-control" ng-model="utensilios" id="txtUtensilios" name="txtUtensilios" required>
+            </div>
+            <div class="mb-1">
+                <label>Instrucciones</label>
+                <input type="text" class="form-control" ng-model="instrucciones" id="txtInstrucciones" name="txtInstrucciones" required>
+            </div>
+            <div class="mb-1">
+                <label>Nutrientes</label>
+                <input type="text" class="form-control" ng-model="nutrientes" id="txtNutrientes" name="txtNutrientes" required>
+            </div>
+            <div class="mb-1">
+                <label for="txtCategoria" class="form-label">Categoría</label>
+                <select class="form-control" ng-model="categorias" name="txtCategoria" id="txtCategoria" required>
+                    <option value="" disabled selected hidden>Selecciona una categoría</option>
+                    <option value="Desayunos">Desayunos</option>
+                    <option value="Comidas">Comidas</option>
+                    <option value="Cenas">Cenas</option>
+                    <option value="Postres">Postres</option>
+                    <option value="Rapida">Rápida</option>
+                    <option value="Saludable">Saludable</option>
+                </select>
+            </div>
     
-    <form id="frmRecetas" method="post" ng-submit="crearReceta()">
-        <input type="hidden" id="idReceta" name="idReceta">
-    
-        <div class="mb-1">
-            <label>Nombre</label>
-            <input type="text" class="form-control" ng-model="nombre" id="txtNombre" name="txtNombre" required>
+            <div class="mb-1 text-end">
+                <button class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+
+        <!-- VISTA PREVIA (BUILDER) -->
+        {% raw %}
+        <div class="card mt-4" ng-if="nuevaReceta">
+          <div class="card-header bg-success text-white">
+            Vista previa de tu receta
+          </div>
+          <div class="card-body">
+            <h3 class="card-title mb-1">{{ nuevaReceta.Nombre }}</h3>
+            <p class="text-muted mb-3">{{ nuevaReceta.Descripcion }}</p>
+        
+            <div class="row">
+              <div class="col-md-6">
+                <h6 class="fw-bold">Ingredientes</h6>
+                <p class="mb-2">{{ nuevaReceta.Ingredientes }}</p>
+              </div>
+              <div class="col-md-6">
+                <h6 class="fw-bold">Utensilios</h6>
+                <p class="mb-2">{{ nuevaReceta.Utensilio }}</p>
+              </div>
+            </div>
+        
+            <h6 class="fw-bold mt-3">Instrucciones</h6>
+            <p>{{ nuevaReceta.Instrucciones }}</p>
+        
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <span class="badge bg-info text-dark me-2">
+                  Nutrientes: {{ nuevaReceta.Nutrientes }}
+                </span>
+              </div>
+              <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                <span class="badge bg-secondary">
+                  Categoría: {{ nuevaReceta.Categorias }}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="mb-1">
-            <label>Descripcion</label>
-            <input type="text" class="form-control" ng-model="descripcion" id="txtDescripcion" name="txtDescripcion" required>
+        {% endraw %}
+
+        <!-- FACTORY: CATEGORÍAS RAPIDA / DESAYUNOS -->
+        <h5 class="mt-4">{{ "{{ categoriaRapida.titulo }}" }}</h5>
+        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
+             ng-repeat="receta in categoriaRapida.recetas">
+            <div class="card-header">Receta</div>
+            <div class="card-body">
+                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
+            </div>
         </div>
-        <div class="mb-1">
-            <label>Ingredientes</label>
-            <input type="text" class="form-control" ng-model="ingredientes" id="txtIngredientes" name="txtIngredientes" required>
+        
+        <h5>{{ "{{ categoriaDesayunos.titulo }}" }}</h5>
+        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
+             ng-repeat="receta in categoriaDesayunos.recetas">
+            <div class="card-header">Receta</div>
+            <div class="card-body">
+                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
+            </div>
         </div>
-        <div class="mb-1">
-            <label>Utensilios</label>
-            <input type="text" class="form-control" ng-model="utensilios" id="txtUtensilios" name="txtUtensilios" required>
+        
+        <!-- BUSCADOR + TABLA ADMIN -->
+        <div class="mb-3 input-group">
+            <input type="text" class="form-control" id="txtBuscarReceta"
+                   placeholder="Buscar receta" ng-model="busqueda">
+            <button class="btn btn-secondary" id="btnBuscarReceta" type="button">Buscar</button>
         </div>
-        <div class="mb-1">
-            <label>Instrucciones</label>
-            <input type="text" class="form-control" ng-model="instrucciones" id="txtInstrucciones" name="txtInstrucciones" required>
-        </div>
-        <div class="mb-1">
-            <label>Nutrientes</label>
-            <input type="text" class="form-control" ng-model="nutrientes" id="txtNutrientes" name="txtNutrientes" required>
-        </div>
-        <div class="mb-1">
-            <label for="txtCategoria" class="form-label">Categoría</label>
-            <select class="form-control" ng-model="categorias" name="txtCategoria" id="txtCategoria" required>
-                <option value="" disabled selected hidden>Selecciona una categoría</option>
-                <option value="Desayunos">Desayunos</option>
-                <option value="Comidas">Comidas</option>
-                <option value="Cenas">Cenas</option>
-                <option value="Postres">Postres</option>
-                <option value="Rapida">Rápida</option>
-                <option value="Saludable">Saludable</option>
-            </select>
+        
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead class="table-active">
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Ingredientes</th>
+                        <th>Utensilios</th>
+                        <th>Instrucciones</th>
+                        <th>Nutrientes</th>
+                        <th>Categoría</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="recetasTbody"></tbody>
+            </table>
         </div>
 
-        <div class="mb-1 text-end">
-            <button class="btn btn-primary">Guardar</button>
-        </div>
-    </form>
+    </section>
 
-    {% raw %}
-    <div class="card mt-4" ng-if="nuevaReceta">
-      <div class="card-header bg-success text-white">
-        Vista previa de tu receta
-      </div>
-      <div class="card-body">
-        <h3 class="card-title mb-1">{{ nuevaReceta.Nombre }}</h3>
-        <p class="text-muted mb-3">{{ nuevaReceta.Descripcion }}</p>
+    <!-- =======================================================
+         VISTA USUARIO NORMAL (Tipo_Usuario != 1) - solo lectura
+         ======================================================= -->
+    <section ng-if="SessionService.getTipo() != 1">
+        <form id="frmRecetas" method="post" ng-submit="crearReceta()">
+            <input type="hidden" id="idReceta" name="idReceta">
+        
+            <div class="mb-1">
+                <label>Nombre</label>
+                <input type="text" class="form-control" ng-model="nombre" id="txtNombre" name="txtNombre" required>
+            </div>
+            <div class="mb-1">
+                <label>Descripción</label>
+                <input type="text" class="form-control" ng-model="descripcion" id="txtDescripcion" name="txtDescripcion" required>
+            </div>
+            <div class="mb-1">
+                <label>Ingredientes</label>
+                <input type="text" class="form-control" ng-model="ingredientes" id="txtIngredientes" name="txtIngredientes" required>
+            </div>
+            <div class="mb-1">
+                <label>Utensilios</label>
+                <input type="text" class="form-control" ng-model="utensilios" id="txtUtensilios" name="txtUtensilios" required>
+            </div>
+            <div class="mb-1">
+                <label>Instrucciones</label>
+                <input type="text" class="form-control" ng-model="instrucciones" id="txtInstrucciones" name="txtInstrucciones" required>
+            </div>
+            <div class="mb-1">
+                <label>Nutrientes</label>
+                <input type="text" class="form-control" ng-model="nutrientes" id="txtNutrientes" name="txtNutrientes" required>
+            </div>
+            <div class="mb-1">
+                <label for="txtCategoria" class="form-label">Categoría</label>
+                <select class="form-control" ng-model="categorias" name="txtCategoria" id="txtCategoria" required>
+                    <option value="" disabled selected hidden>Selecciona una categoría</option>
+                    <option value="Desayunos">Desayunos</option>
+                    <option value="Comidas">Comidas</option>
+                    <option value="Cenas">Cenas</option>
+                    <option value="Postres">Postres</option>
+                    <option value="Rapida">Rápida</option>
+                    <option value="Saludable">Saludable</option>
+                </select>
+            </div>
     
-        <div class="row">
-          <div class="col-md-6">
-            <h6 class="fw-bold">Ingredientes</h6>
-            <p class="mb-2">{{ nuevaReceta.Ingredientes }}</p>
-          </div>
-          <div class="col-md-6">
-            <h6 class="fw-bold">Utensilios</h6>
-            <p class="mb-2">{{ nuevaReceta.Utensilio }}</p>
-          </div>
-        </div>
-    
-        <h6 class="fw-bold mt-3">Instrucciones</h6>
-        <p>{{ nuevaReceta.Instrucciones }}</p>
-    
-        <div class="row mt-3">
-          <div class="col-md-6">
-            <span class="badge bg-info text-dark me-2">
-              Nutrientes: {{ nuevaReceta.Nutrientes }}
-            </span>
-          </div>
-          <div class="col-md-6 text-md-end mt-2 mt-md-0">
-            <span class="badge bg-secondary">
-              Categoría: {{ nuevaReceta.Categorias }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endraw %}
+            <div class="mb-1 text-end">
+                <button class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
 
-    
-    <h5>{{ "{{ categoriaRapida.titulo }}" }}</h5>
-    <div class="card text-bg-info mb-3" style="max-width: 18rem;" ng-repeat="receta in categoriaRapida.recetas ">
-        <div class="card-header">Receta</div>
-        <div class="card-body">
-            <h3 class="card-title">{{ "{{ receta.Nombre }} "}}</h3>
-            <p class="card-text"></p>
+
+        <!-- Puedes mostrar también categorías del Factory si quieres -->
+        <h5>{{ "{{ categoriaRapida.titulo }}" }}</h5>
+        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
+             ng-repeat="receta in categoriaRapida.recetas">
+            <div class="card-header">Receta</div>
+            <div class="card-body">
+                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
+            </div>
         </div>
-    </div>
-    
-    <h5>{{ "{{ categoriaDesayunos.titulo }}" }}</h5>
-    <div class="card text-bg-info mb-3" style="max-width: 18rem;" ng-repeat="receta in  categoriaDesayunos.recetas ">
-        <div class="card-header">Receta</div>
-        <div class="card-body">
-            <h3 class="card-title">{{ "{{ receta.Nombre }} "}}</h3>
-            <p class="card-text"></p>
+        
+        <h5>{{ "{{ categoriaDesayunos.titulo }}" }}</h5>
+        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
+             ng-repeat="receta in categoriaDesayunos.recetas">
+            <div class="card-header">Receta</div>
+            <div class="card-body">
+                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
+            </div>
         </div>
-    </div>
-    
-    <div class="mb-3 input-group">
-        <input type="text" class="form-control"  id="txtBuscarReceta" placeholder="Buscar receta" ng-model="busqueda" >
-        <button class="btn btn-secondary" id="btnBuscarReceta" type="button">Buscar</button>
-    </div>
-    
-    <div class="table-responsive">
-        <table class="table table-sm">
-            <thead class="table-active">
-                <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Ingredientes</th>
-                    <th>Utensilios</th>
-                    <th>Instrucciones</th>
-                    <th>Nutrientes</th>
-                    <th>Categoria</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="recetasTbody"></tbody>
-        </table>
-    </div>
+
+        <!-- BUSCADOR + TABLA SOLO LECTURA -->
+        <div class="mb-3 input-group">
+            <input type="text" class="form-control" id="txtBuscarReceta"
+                   placeholder="Buscar receta" ng-model="busqueda">
+            <button class="btn btn-secondary" id="btnBuscarReceta" type="button">Buscar</button>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead class="table-active">
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Ingredientes</th>
+                        <th>Utensilios</th>
+                        <th>Instrucciones</th>
+                        <th>Nutrientes</th>
+                        <th>Categoría</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="recetasTbody"></tbody>
+            </table>
+        </div>
+
+    </section>
+
 </div>
-
-
-
-
-
-
