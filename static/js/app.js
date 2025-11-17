@@ -172,6 +172,11 @@ app.service("RecetaBuilder", function() {
         return this;
     };
 
+    this.setImagen = function(imagen) {
+        receta.Imagen = imagen;
+        return this;
+    };
+
     this.build = function() {
         return angular.copy(receta); // devuelve un clon del objeto receta final
     };
@@ -703,6 +708,9 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     buscarRecetas();
 
+// IMAGEN
+    $scope.defaultRecetaImg = "{{ url_for('static', filename='img/collagIS.png') }}";
+    
 // LOG
     $scope.$watch("busqueda", function(newVal, oldVal) {
         if (newVal != oldVal) {
@@ -745,6 +753,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             .setInstrucciones($scope.instrucciones)
             .setNutrientes($scope.nutrientes)
             .setCategorias($scope.categorias)
+            .setImagen($scope.imagen)
             .build();
 
         console.log("Receta construida con Builder:", $scope.nuevaReceta);
@@ -757,7 +766,8 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             Utensilios: $("#txtUtensilios").val(),
             Instrucciones: $("#txtInstrucciones").val(),
             Nutrientes: $("#txtNutrientes").val(),
-            Categorias: $("#txtCategoria").val()
+            Categorias: $("#txtCategoria").val(),
+            Imagen: $("#txtImagen").val()
         }, function(response){
             MensajesService.modal("Has guardado una receta.");
             $("#frmRecetas")[0].reset();
@@ -817,6 +827,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
                         <td>${receta.Instrucciones}</td>
                         <td>${receta.Nutrientes}</td>
                         <td>${receta.Categorias}</td>
+                        <td>${receta.Imagen}</td>
                         <td>
                             <button class="btn btn-sm btn-info btn-facade" data-id="${receta.IdReceta}">Ver Facade</button>
                             <button class="btn btn-sm btn-danger btn-eliminar" data-id="${receta.IdReceta}">Eliminar</button>
@@ -864,6 +875,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
