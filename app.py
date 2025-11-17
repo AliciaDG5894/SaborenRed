@@ -61,6 +61,27 @@ def login(fun):
         return fun(*args, **kwargs)
     return decorador
 
+# preferencias admin
+def admin(fun):
+    @wraps(fun)
+    def decorador(*args, **kwargs):
+        if not session.get("login"):
+            return jsonify({
+                "estado": "error",
+                "respuesta": "No has iniciado sesión"
+            }), 401
+
+        # 1 = admin, 2 = usuario normal
+        if session.get("login-tipo") != 1:
+            return jsonify({
+                "estado": "error",
+                "respuesta": "No tienes permisos para esta acción"
+            }), 403
+
+        return fun(*args, **kwargs)
+    return decorador
+
+
 @app.errorhandler(Exception)
 def handle_exception(e):
     print("❌ ERROR DETECTADO EN FLASK ❌")
@@ -264,6 +285,7 @@ def guardarReceta():
 # ELIMINAR
 @app.route("/recetas/eliminar", methods=["POST"])
 @login
+@admin
 def eliminarReceta():
     if not con.is_connected():
         con.reconnect()
@@ -426,6 +448,7 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
