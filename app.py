@@ -217,8 +217,7 @@ def recetasTbody():
         Utensilios,
         Instrucciones,
         Nutrientes,
-        Categorias,
-        Imagen
+        Categorias
 
     FROM Recetas
 
@@ -247,7 +246,6 @@ def guardarReceta():
     Instrucciones    = request.form.get("Instrucciones")
     Nutrientes       = request.form.get("Nutrientes")
     Categorias       = request.form.get("Categorias")
-    Imagen           = request.form.get("Imagen")
 
     # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
     
@@ -263,18 +261,17 @@ def guardarReceta():
         Utensilios          = %s,
         Instrucciones       = %s,
         Nutrientes          = %s,
-        Categorias          = %s,
-        Imagen              = %s
+        Categorias          = %s
 
         WHERE IdReceta = %s
         """
-        val = (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen, IdReceta)
+        val = (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, IdReceta)
     else:
         sql = """
-        INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen)
-                    VALUES (   %s,       %s,        %s,          %s,          %s,           %s,          %s,         %s,       %s)
+        INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
+                    VALUES (   %s,       %s,        %s,          %s,          %s,           %s,          %s,         %s)
         """
-        val =               (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen)
+        val =               (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
     
     cursor.execute(sql, val)
     con.commit()
@@ -356,8 +353,7 @@ def buscarReceta():
             Utensilios,
             Instrucciones,
             Nutrientes,
-            Categorias,
-            Imagen
+            Categorias
            
     FROM Recetas
     
@@ -435,7 +431,7 @@ def obtener_recetas_favoritos(Id_Usuario):
     try:
         sql = """
         SELECT r.IdReceta, r.Nombre, r.Descripcion, r.Ingredientes, r.Utensilios,
-               r.Instrucciones, r.Nutrientes, r.Categorias, r.Imagen,
+               r.Instrucciones, r.Nutrientes, r.Categorias,
                f.IdFavorito, f.Comentario, f.Calificacion, f.Fecha
         FROM Recetas r
         LEFT JOIN Favoritos f
@@ -452,5 +448,6 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
