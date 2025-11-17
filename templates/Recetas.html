@@ -34,7 +34,14 @@
         </div>
         <div class="mb-1">
             <label>Categoria</label>
-            <input type="text" class="form-control" ng-model="categorias" id="txtCategoria" name="txtCategoria">
+            <select class="form-control" ng-model="categorias" name="txtCategoria" id="txtCategoria">
+                <option value="Desayunos">Desayunos</option>
+                <option value="Comidas">Comidas</option>
+                <option value="Cenas">Cenas</option>
+                <option value="Postres">Postres</option>
+                <option value="Rapida">Rapida</option>
+                <option value="Saludable">Saludable</option>
+            </select>
         </div>
         <div class="mb-1 text-end">
             <button class="btn btn-primary">Guardar</button>
@@ -123,5 +130,6 @@
         </table>
     </div>
 </div>
+
 
 
