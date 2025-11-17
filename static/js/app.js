@@ -695,87 +695,56 @@ app.config(function ($routeProvider, $locationProvider, $provide) {
 })
 
 app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService, RecetaFacade, RecetaBuilder) {
+    /* ============================
+       1. Cargar tabla de recetas
+       ============================ */
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
-            $("#recetasTbody").html(trsHTML)
-        })
+            $("#recetasTbody").html(trsHTML);
+        });
     }
-    
+
     buscarRecetas();
 
+    /* Log de búsqueda */
     $scope.$watch("busqueda", function(newVal, oldVal) {
         if (newVal != oldVal) {
-            $.get("log", {
+            $.get("/log", {
                 actividad: "Busqueda de recetas 🔍",
-                descripcion: `Se realizo la busqueda de una receta "${newVal}"`
-            })
+                descripcion: `Se realizó la búsqueda de una receta "${newVal}"`
+            });
         }
-    })
-    
-    $scope.SessionService = SessionService
+    });
+
+    $scope.SessionService = SessionService;
     $scope.nuevaReceta = null;
-    
+
     $scope.mostrarUsuario = function () {
-        console.log("Usuario actual:", SessionService.getUsr())
-    }
+        console.log("Usuario actual:", SessionService.getUsr());
+    };
 
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
 
-    RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) { 
-        const tbody = $("#recetasTbody"); 
-        tbody.empty(); 
-    
-        recetas.forEach(receta => { 
-            const fila = `
-                <tr> 
-                    <td>${receta.IdReceta}</td> 
-                    <td>${receta.Nombre}</td> 
-                    <td>${receta.Descripcion}</td> 
-                    <td>${receta.Ingredientes}</td> 
-                    <td>${receta.Utensilios}</td> 
-                    <td>${receta.Instrucciones}</td> 
-                    <td>${receta.Nutrientes}</td> 
-                    <td>${receta.Categorias}</td> 
-                    <td> 
-                        <button class="btn btn-sm btn-info btn-facade" data-id="${receta.IdReceta}">Ver Facade</button> 
-                        <button class="btn btn-sm btn-danger btn-eliminar" data-id="{{ receta.IdReceta}}">Eliminar</button> 
-                    </td> 
-                </tr>
-            `; 
-            tbody.append(fila); 
-        }); 
-    
-        $(".btn-facade").click(function() { 
-            const recetaId = $(this).data("id"); 
-            RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) { 
-                const receta = recetas.find(r => r.IdReceta == recetaId); 
-                if (receta) { 
-                    alert(`Receta: ${receta.Nombre}\nIngredientes: ${receta.Ingredientes}\nComentario: ${receta.Comentario || "Sin comentarios"}\nCalificación: ${receta.Calificacion || "Sin calificación"}`); 
-                } 
-            }); 
-        }); 
+    /* ==========================================
+       2. FACTORY: categorías rápidas / desayuno
+       ========================================== */
+    $.get("recetas/categorias", { categoria: "Rapida" }, function (rapida) {
+        const categoriaRapida = CategoriaFactory.create("Rapida", rapida);
+        console.log("Comida rápida FACTORY", categoriaRapida.getInfo());
+        $scope.categoriaRapida = categoriaRapida;
     });
 
-    // factory
-    $.get("recetas/categorias", {
-        categoria: "Rapida"
-    }, function (rapida) {
-        const categoriaRapida = CategoriaFactory.create("Rapida", rapida)
-        console.log("Comida rapida FACTORY", categoriaRapida.getInfo())
-        $scope.categoriaRapida = categoriaRapida
+    $.get("recetas/categorias", { categoria: "Desayunos" }, function (desayunos) {
+        const categoriaDesayunos = CategoriaFactory.create("Desayunos", desayunos);
+        console.log("Comida desayunos FACTORY", categoriaDesayunos.getInfo());
+        $scope.categoriaDesayunos = categoriaDesayunos;
+    });
 
-    })
-
-    $.get("recetas/categorias", {
-        categoria: "Desayunos"
-    }, function (desayunos) {
-        const categoriaDesayunos = CategoriaFactory.create("Desayunos", desayunos)
-        console.log("Comida desayunos FACTORY", categoriaDesayunos.getInfo())
-        $scope.categoriaDesayunos = categoriaDesayunos
-
-    })
-    
+    /* ======================================
+       3. BUILDER: crear / actualizar receta
+       ====================================== */
     $scope.crearReceta = function() {
+        // Construyes la receta con el patrón Builder
         $scope.nuevaReceta = RecetaBuilder.reset()
             .setNombre($scope.nombre)
             .setDescripcion($scope.descripcion)
@@ -785,10 +754,10 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             .setNutrientes($scope.nutrientes)
             .setCategorias($scope.categorias)
             .build();
-    
+
         console.log("Receta construida con Builder:", $scope.nuevaReceta);
-    
-        // Aquí sigue tu post al backend si quieres
+
+        // 👉 ÚNICO POST (ya quitamos el submit duplicado)
         $.post("/recetas", {
             IdReceta: $("#idReceta").val(),
             Nombre: $("#txtNombre").val(),
@@ -799,7 +768,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             Nutrientes: $("#txtNutrientes").val(),
             Categorias: $("#txtCategoria").val()
         }, function(response){
-            MensajesService.modal("Haz guardado una receta.")
+            MensajesService.modal("Has guardado una receta.");
             $("#frmRecetas")[0].reset();
             $("#idReceta").val("");
             buscarRecetas(); 
@@ -808,21 +777,44 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         });
     };
 
-    
-    // Pusher
-    Pusher.logToConsole = true;
-    var pusher = new Pusher('b51b00ad61c8006b2e6f', {
-      cluster: 'us2'
-    });
-    var channel = pusher.subscribe("canalRecetas")
-    channel.bind("eventoRecetas", function(data) {
-        buscarRecetas()
+    /* ======================================
+       4. FACADE: botón "Ver Facade"
+       ====================================== */
+    // Usamos delegación para que funcione SIEMPRE,
+    // incluso cuando recargas la tabla.
+    $(document).on("click", ".btn-facade", function () {
+        const recetaId = $(this).data("id");
+
+        RecetaFacade.obtenerRecetasUsuario(Id_Usuario).then(function(recetas) {
+            const receta = recetas.find(r => r.IdReceta == recetaId);
+
+            if (receta) {
+                MensajesService.modal(
+                    `
+                    <strong>${receta.Nombre}</strong><br>
+                    <em>${receta.Descripcion}</em><br><br>
+                    <b>Ingredientes:</b> ${receta.Ingredientes}<br>
+                    <b>Utensilios:</b> ${receta.Utensilios}<br>
+                    <b>Instrucciones:</b> ${receta.Instrucciones}<br>
+                    <b>Nutrientes:</b> ${receta.Nutrientes}<br>
+                    <b>Categoría:</b> ${receta.Categorias}<br>
+                    <b>Calificación:</b> ${receta.Calificacion || "Sin calificación"}
+                    `,
+                    "Detalle de receta (Facade)"
+                );
+            } else {
+                console.warn("No se encontró la receta con Id:", recetaId);
+            }
+        });
     });
 
+    /* ======================================
+       5. Búsqueda por texto
+       ====================================== */
     $(document).on("click", "#btnBuscarReceta", function() {
         const busqueda = $("#txtBuscarReceta").val().trim();
 
-        if(busqueda === "") {
+        if (busqueda === "") {
             buscarRecetas();
             return;
         }
@@ -841,10 +833,10 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
                         <td>${receta.Nutrientes}</td>
                         <td>${receta.Categorias}</td>
                         <td>
-                            <button class="btn btn-sm btn-danger btn-eliminar" data-id="{{ receta.IdReceta}}">Eliminar</button>
+                            <button class="btn btn-sm btn-info btn-facade" data-id="${receta.IdReceta}">Ver Facade</button>
+                            <button class="btn btn-sm btn-danger btn-eliminar" data-id="${receta.IdReceta}">Eliminar</button>
                         </td>
                     </tr>
-                    
                 `;
             });
             $("#recetasTbody").html(trsHTML);
@@ -853,76 +845,44 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         });
     });
 
-    // Permitir Enter en input
+    // Enter en el input de búsqueda
     $("#txtBuscarReceta").on("keypress", function(e) {
         if(e.which === 13) {
             $("#btnBuscarReceta").click();
         }
     });
 
-    // $(document).on("submit", "#frmRecetas", function (event) {
-    //     event.preventDefault();
-
-    //     const idRenta = $("#IdReceta").val(); 
-
-    //     $.post("/recetas", {
-    //         IdReceta: $("#idReceta").val(),
-    //         Nombre: $("#txtNombre").val(),
-    //         Descripcion: $("#txtDescripcion").val(),
-    //         Ingredientes: $("#txtIngredientes").val(),
-    //         Utensilios: $("#txtUtensilios").val(),
-    //         Instrucciones: $("#txtInstrucciones").val(),
-    //         Nutrientes: $("#txtNutrientes").val(),
-    //         Categorias: $("#txtCategoria").val()
-
-    //     }, function(response){
-    //         MensajesService.modal("Haz guardado una receta.")
-            
-    //         console.log("Receta guardada o actualizada correctamente");
-    //         $("#frmRecetas")[0].reset();
-    //         $("#idReceta").val("");
-    //         buscarRecetas(); 
-    //     }).fail(function(xhr){
-    //         console.error("Error al guardar/actualizar receta:", xhr.responseText);
-    //     });
-    // });
-
+    /* ======================================
+       6. Eliminar receta
+       ====================================== */
     $(document).on("click", "#recetasTbody .btn-eliminar", function(){
         const id = $(this).data("id");
         if(confirm("¿Deseas eliminar esta receta?")) {
-            $.post("/recetas/eliminar", {id: id}, function(response){
-                console.log("Receta eliminado correctamente");
+            $.post("/recetas/eliminar", { id: id }, function(response){
+                console.log("Receta eliminada correctamente");
                 buscarRecetas(); 
             }).fail(function(xhr){
                 console.error("Error al eliminar receta:", xhr.responseText);
             });
         }
     });
-        
-    // $(document).on("click", "#recetasTbody .btn-editar", function() {
-    //     const id = $(this).data("id");
-    //     const clienteId = $(this).data("clienteId");
-    //     const trajeId = $(this).data("trajeId");
-    //     const descripcion = $(this).data("descripcion");
-    //     const fechaHoraInicio = $(this).data("fechahorainicio");
-    //     const fechaHoraFin = $(this).data("fechahorafin");
 
-    //     $("#idRenta").val(id);
-    //     $("#txtIdCliente").val(clienteId); 
-    //     $("#txtIdTraje").val(trajeId); 
-    //     $("#txtDescripcion").val(descripcion);
-    //     $("#txtFechaInicio").val(fechaHoraInicio);
-    //     $("#txttxtFechaFin").val(fechaHoraFin);
-
-    //     const btnGuardar = $("#btnGuardar");
-    //     btnGuardar.text("Actualizar");
-    //     btnGuardar.removeClass("btn-primary").addClass("btn-success");
-    // });
-
-    
+    /* ======================================
+       7. Pusher: refrescar tabla
+       ====================================== */
+    Pusher.logToConsole = true;
+    var pusher = new Pusher('b51b00ad61c8006b2e6f', {
+      cluster: 'us2'
+    });
+    var channel = pusher.subscribe("canalRecetas");
+    channel.bind("eventoRecetas", function(data) {
+        buscarRecetas();
+    });
 });
+
 
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
