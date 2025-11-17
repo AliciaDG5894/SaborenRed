@@ -708,9 +708,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     buscarRecetas();
 
-// IMAGEN
-    $scope.defaultRecetaImg = "/static/img/collagIS.png";
-    
 // LOG
     $scope.$watch("busqueda", function(newVal, oldVal) {
         if (newVal != oldVal) {
@@ -745,7 +742,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
 // BUILDER
     $scope.crearReceta = function() {
-        // 1) Builder solo para la vista previa (usa ng-model)
         $scope.nuevaReceta = RecetaBuilder.reset()
             .setNombre($scope.nombre)
             .setDescripcion($scope.descripcion)
@@ -755,46 +751,27 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             .setNutrientes($scope.nutrientes)
             .setCategorias($scope.categorias)
             .build();
-    
+
         console.log("Receta construida con Builder:", $scope.nuevaReceta);
-    
-        // 2) Construir FormData con los NOMBRES que espera Flask
-        const formData = new FormData();
-        formData.append("IdReceta", $("#idReceta").val() || "");
-        formData.append("Nombre", $("#txtNombre").val());
-        formData.append("Descripcion", $("#txtDescripcion").val());
-        formData.append("Ingredientes", $("#txtIngredientes").val());
-        formData.append("Utensilios", $("#txtUtensilios").val());
-        formData.append("Instrucciones", $("#txtInstrucciones").val());
-        formData.append("Nutrientes", $("#txtNutrientes").val());
-        formData.append("Categorias", $("#txtCategoria").val());
-    
-        // 3) Archivo de imagen
-        const fileInput = document.getElementById("txtImagen");
-        if (fileInput && fileInput.files && fileInput.files.length > 0) {
-            formData.append("Imagen", fileInput.files[0]);  // 👈 este es el `file`
-        }
-    
-        // 4) Enviar AJAX como multipart/form-data
-        $.ajax({
-            url: "/recetas",
-            method: "POST",
-            data: formData,
-            processData: false,   // no procesar los datos
-            contentType: false,   // dejar que el navegador ponga el boundary
-            success: function(response) {
-                MensajesService.modal("Has guardado una receta.");
-                $("#frmRecetas")[0].reset();
-                $("#idReceta").val("");
-                buscarRecetas(); 
-            },
-            error: function(xhr) {
-                console.error("Error al guardar/actualizar receta:", xhr.responseText);
-            }
+
+        $.post("/recetas", {
+            IdReceta: $("#idReceta").val(),
+            Nombre: $("#txtNombre").val(),
+            Descripcion: $("#txtDescripcion").val(),
+            Ingredientes: $("#txtIngredientes").val(),
+            Utensilios: $("#txtUtensilios").val(),
+            Instrucciones: $("#txtInstrucciones").val(),
+            Nutrientes: $("#txtNutrientes").val(),
+            Categorias: $("#txtCategoria").val()
+        }, function(response){
+            MensajesService.modal("Has guardado una receta.");
+            $("#frmRecetas")[0].reset();
+            $("#idReceta").val("");
+            buscarRecetas(); 
+        }).fail(function(xhr){
+            console.error("Error al guardar/actualizar receta:", xhr.responseText);
         });
     };
-
-
 
 // FACADE
     $(document).on("click", ".btn-facade", function () {
@@ -845,7 +822,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
                         <td>${receta.Instrucciones}</td>
                         <td>${receta.Nutrientes}</td>
                         <td>${receta.Categorias}</td>
-                        <td>${receta.Imagen}</td>
                         <td>
                             <button class="btn btn-sm btn-info btn-facade" data-id="${receta.IdReceta}">Ver Facade</button>
                             <button class="btn btn-sm btn-danger btn-eliminar" data-id="${receta.IdReceta}">Eliminar</button>
@@ -889,10 +865,10 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     });
 });
 
-
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
