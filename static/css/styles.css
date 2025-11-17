@@ -109,6 +109,203 @@
     border-color: #185733;
 }
 
+/* ===== Layout general de recetas (vista cliente) ===== */
+
+.sr-layout {
+    display: flex;
+    min-height: calc(100vh - 2rem);
+}
+
+/* SIDEBAR IZQUIERDO */
+
+.sr-sidebar {
+    width: 70px;
+    background-color: #ffffff;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+    gap: 1rem;
+}
+
+.sr-sidebar-logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sr-sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.sr-icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: none;
+    background-color: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #444;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, transform 0.1s;
+}
+
+.sr-icon-btn:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-1px);
+}
+
+.sr-icon-btn.active {
+    background-color: #1f6f3f;
+    color: #fff;
+}
+
+.sr-sidebar-bottom {
+    margin-top: auto;
+}
+
+/* CONTENIDO PRINCIPAL */
+
+.sr-main {
+    flex: 1;
+    padding: 1.5rem 2rem;
+    background-color: #faf7f3;
+    overflow-x: hidden;
+}
+
+/* TOPBAR */
+
+.sr-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.sr-brand-title {
+    font-family: "Georgia", "Times New Roman", serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.sr-top-nav {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.sr-top-link {
+    cursor: pointer;
+    color: #555;
+}
+
+.sr-top-link-active {
+    font-weight: 600;
+}
+
+.sr-user-area {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sr-user-pill {
+    padding: 0.4rem 1.5rem;
+    border-radius: 999px;
+    border: 1px solid #000;
+    background-color: #fff;
+    font-size: 0.9rem;
+}
+
+.sr-user-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid #000;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+/* GRID DE RECETAS */
+
+.sr-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 1.2rem;
+}
+
+.sr-card {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    background-color: #fff;
+}
+
+.sr-card-img-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 130%; /* relación tipo Pinterest */
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.sr-card-img-wrapper img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Overlay de botones (corazón / ver receta) */
+
+.sr-card-overlay {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.sr-card:hover .sr-card-overlay {
+    opacity: 1;
+}
+
+.sr-circle-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.92);
+    color: #1f6f3f;
+    font-size: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.sr-circle-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+
 /* Responsivo: en móvil que se vea solo el formulario y sin franja fija muy gruesa */
 @media (max-width: 991.98px) {
     .login-right::after {
@@ -119,5 +316,6 @@
         display: none; /* ocultar logo sobre fotos en móvil si quieres */
     }
 }
+
 
 
