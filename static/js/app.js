@@ -860,33 +860,32 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         }
     });
 
-    $(document).on("submit", "#frmRecetas", function (event) {
-        event.preventDefault();
+    // $(document).on("submit", "#frmRecetas", function (event) {
+    //     event.preventDefault();
 
-        const idRenta = $("#IdReceta").val(); 
+    //     const idRenta = $("#IdReceta").val(); 
 
-        $.post("/recetas", {
-            IdReceta: $("#idReceta").val(),
-            Nombre: $("#txtNombre").val(),
-            Descripcion: $("#txtDescripcion").val(),
-            Ingredientes: $("#txtIngredientes").val(),
-            Utensilios: $("#txtUtensilios").val(),
-            Instrucciones: $("#txtInstrucciones").val(),
-            Nutrientes: $("#txtNutrientes").val(),
-            Categorias: $("#txtCategoria").val()
+    //     $.post("/recetas", {
+    //         IdReceta: $("#idReceta").val(),
+    //         Nombre: $("#txtNombre").val(),
+    //         Descripcion: $("#txtDescripcion").val(),
+    //         Ingredientes: $("#txtIngredientes").val(),
+    //         Utensilios: $("#txtUtensilios").val(),
+    //         Instrucciones: $("#txtInstrucciones").val(),
+    //         Nutrientes: $("#txtNutrientes").val(),
+    //         Categorias: $("#txtCategoria").val()
 
-        }, function(response){
-            MensajesService.modal("Haz guardado una receta.")
+    //     }, function(response){
+    //         MensajesService.modal("Haz guardado una receta.")
             
-            console.log("Receta guardada o actualizada correctamente");
-            $("#frmRecetas")[0].reset();
-            $("#idReceta").val("");
-            buscarRecetas(); 
-        }).fail(function(xhr){
-            console.error("Error al guardar/actualizar receta:", xhr.responseText);
-        });
-
-    });
+    //         console.log("Receta guardada o actualizada correctamente");
+    //         $("#frmRecetas")[0].reset();
+    //         $("#idReceta").val("");
+    //         buscarRecetas(); 
+    //     }).fail(function(xhr){
+    //         console.error("Error al guardar/actualizar receta:", xhr.responseText);
+    //     });
+    // });
 
     $(document).on("click", "#recetasTbody .btn-eliminar", function(){
         const id = $(this).data("id");
@@ -926,3 +925,4 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
