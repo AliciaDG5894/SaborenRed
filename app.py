@@ -222,7 +222,12 @@ def recetas():
     Instrucciones = request.form.get("Instrucciones")
     Nutrientes    = request.form.get("Nutrientes")
     Categorias    = request.form.get("Categorias")
-    Imagen        = request.form.get("Imagen")
+    file = request.files.get("Imagen")
+    Imagen = None
+    if file and file.filename:
+        ruta = f"static/uploads/{file.filename}"
+        file.save(ruta)
+        Imagen = ruta
 
     cursor = con.cursor()
 
@@ -520,3 +525,4 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
