@@ -695,9 +695,6 @@ app.config(function ($routeProvider, $locationProvider, $provide) {
 })
 
 app.controller("recetasCtrl", function ($scope, $http, SessionService, CategoriaFactory, MensajesService, RecetaFacade, RecetaBuilder) {
-    /* ============================
-       1. Cargar tabla de recetas
-       ============================ */
     function buscarRecetas() {
         $.get("/recetasTbody", function (trsHTML) {
             $("#recetasTbody").html(trsHTML);
@@ -706,7 +703,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     buscarRecetas();
 
-    /* Log de búsqueda */
+// LOG
     $scope.$watch("busqueda", function(newVal, oldVal) {
         if (newVal != oldVal) {
             $.get("/log", {
@@ -725,9 +722,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
 
-    /* ==========================================
-       2. FACTORY: categorías rápidas / desayuno
-       ========================================== */
+// FACTORY
     $.get("recetas/categorias", { categoria: "Rapida" }, function (rapida) {
         const categoriaRapida = CategoriaFactory.create("Rapida", rapida);
         console.log("Comida rápida FACTORY", categoriaRapida.getInfo());
@@ -740,11 +735,8 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         $scope.categoriaDesayunos = categoriaDesayunos;
     });
 
-    /* ======================================
-       3. BUILDER: crear / actualizar receta
-       ====================================== */
+// BUILDER
     $scope.crearReceta = function() {
-        // Construyes la receta con el patrón Builder
         $scope.nuevaReceta = RecetaBuilder.reset()
             .setNombre($scope.nombre)
             .setDescripcion($scope.descripcion)
@@ -757,7 +749,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
         console.log("Receta construida con Builder:", $scope.nuevaReceta);
 
-        // 👉 ÚNICO POST (ya quitamos el submit duplicado)
         $.post("/recetas", {
             IdReceta: $("#idReceta").val(),
             Nombre: $("#txtNombre").val(),
@@ -777,11 +768,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         });
     };
 
-    /* ======================================
-       4. FACADE: botón "Ver Facade"
-       ====================================== */
-    // Usamos delegación para que funcione SIEMPRE,
-    // incluso cuando recargas la tabla.
+// FACADE
     $(document).on("click", ".btn-facade", function () {
         const recetaId = $(this).data("id");
 
@@ -808,9 +795,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         });
     });
 
-    /* ======================================
-       5. Búsqueda por texto
-       ====================================== */
+// BUSQUEDA
     $(document).on("click", "#btnBuscarReceta", function() {
         const busqueda = $("#txtBuscarReceta").val().trim();
 
@@ -852,9 +837,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         }
     });
 
-    /* ======================================
-       6. Eliminar receta
-       ====================================== */
+// ELIMINAR
     $(document).on("click", "#recetasTbody .btn-eliminar", function(){
         const id = $(this).data("id");
         if(confirm("¿Deseas eliminar esta receta?")) {
@@ -867,9 +850,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         }
     });
 
-    /* ======================================
-       7. Pusher: refrescar tabla
-       ====================================== */
     Pusher.logToConsole = true;
     var pusher = new Pusher('b51b00ad61c8006b2e6f', {
       cluster: 'us2'
@@ -884,5 +864,6 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
