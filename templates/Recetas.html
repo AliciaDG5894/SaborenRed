@@ -61,6 +61,10 @@
                     <option value="Saludable">Saludable</option>
                 </select>
             </div>
+            <div class="mb-1">
+                <label>Imagen</label>
+                <input type="text" class="form-control" ng-model="imagen" id="txtImagen" name="txtImagen">
+            </div>
     
             <div class="mb-1 text-end">
                 <button class="btn btn-primary">Guardar</button>
@@ -158,7 +162,6 @@
          VISTA USUARIO NORMAL (Tipo_Usuario != 1) - solo lectura
          ======================================================= -->
     <section ng-if="SessionService.getTipo() != 1">
-    
         <div class="sr-layout">
     
             <!-- SIDEBAR IZQUIERDO -->
@@ -255,4 +258,5 @@
     </section>
 
 </div>
+
 
