@@ -247,19 +247,21 @@ def guardarReceta():
     Nutrientes       = request.form.get("Nutrientes")
     Categorias       = request.form.get("Categorias")
     file             = request.files.get("fileImagen")
-    # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
+    Imagen_form = request.form.get("Imagen")
 
+    file = request.files.get("fileImagen")
+
+    Imagen = Imagen_form
     if file and file.filename:
-    filename = secure_filename(file.filename)
+        filename = secure_filename(file.filename)
 
-    uploads_dir = os.path.join(app.root_path, "static", "uploads")
-    os.makedirs(uploads_dir, exist_ok=True)
+        uploads_dir = os.path.join(app.root_path, "static", "uploads")
+        os.makedirs(uploads_dir, exist_ok=True)
 
-    file_path = os.path.join(uploads_dir, filename)
-    file.save(file_path)
+        file_path = os.path.join(uploads_dir, filename)
+        file.save(file_path)
 
-    # Ruta que se guardará en la BD (para usar directo en <img src="...">)
-    Imagen = f"static/uploads/{filename}"
+        Imagen = f"static/uploads/{filename}"
     
     cursor = con.cursor()
 
@@ -462,6 +464,7 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
