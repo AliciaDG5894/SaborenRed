@@ -158,97 +158,101 @@
          VISTA USUARIO NORMAL (Tipo_Usuario != 1) - solo lectura
          ======================================================= -->
     <section ng-if="SessionService.getTipo() != 1">
-        <form id="frmRecetas" method="post" ng-submit="crearReceta()">
-            <input type="hidden" id="idReceta" name="idReceta">
-        
-            <div class="mb-1">
-                <label>Nombre</label>
-                <input type="text" class="form-control" ng-model="nombre" id="txtNombre" name="txtNombre" required>
-            </div>
-            <div class="mb-1">
-                <label>Descripción</label>
-                <input type="text" class="form-control" ng-model="descripcion" id="txtDescripcion" name="txtDescripcion" required>
-            </div>
-            <div class="mb-1">
-                <label>Ingredientes</label>
-                <input type="text" class="form-control" ng-model="ingredientes" id="txtIngredientes" name="txtIngredientes" required>
-            </div>
-            <div class="mb-1">
-                <label>Utensilios</label>
-                <input type="text" class="form-control" ng-model="utensilios" id="txtUtensilios" name="txtUtensilios" required>
-            </div>
-            <div class="mb-1">
-                <label>Instrucciones</label>
-                <input type="text" class="form-control" ng-model="instrucciones" id="txtInstrucciones" name="txtInstrucciones" required>
-            </div>
-            <div class="mb-1">
-                <label>Nutrientes</label>
-                <input type="text" class="form-control" ng-model="nutrientes" id="txtNutrientes" name="txtNutrientes" required>
-            </div>
-            <div class="mb-1">
-                <label for="txtCategoria" class="form-label">Categoría</label>
-                <select class="form-control" ng-model="categorias" name="txtCategoria" id="txtCategoria" required>
-                    <option value="" disabled selected hidden>Selecciona una categoría</option>
-                    <option value="Desayunos">Desayunos</option>
-                    <option value="Comidas">Comidas</option>
-                    <option value="Cenas">Cenas</option>
-                    <option value="Postres">Postres</option>
-                    <option value="Rapida">Rápida</option>
-                    <option value="Saludable">Saludable</option>
-                </select>
-            </div>
     
-            <div class="mb-1 text-end">
-                <button class="btn btn-primary">Guardar</button>
-            </div>
-        </form>
-
-
-        <!-- Puedes mostrar también categorías del Factory si quieres -->
-        <h5>{{ "{{ categoriaRapida.titulo }}" }}</h5>
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
-             ng-repeat="receta in categoriaRapida.recetas">
-            <div class="card-header">Receta</div>
-            <div class="card-body">
-                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
-            </div>
+        <div class="sr-layout">
+    
+            <!-- SIDEBAR IZQUIERDO -->
+            <aside class="sr-sidebar">
+                <!-- Icono redondo arriba -->
+                <div class="sr-sidebar-logo">
+                    <img src="{{ url_for('static', filename='img/icono_circular.png') }}" alt="Sabor en Red">
+                </div>
+    
+                <!-- Menú de iconos -->
+                <nav class="sr-sidebar-menu">
+                    <button class="sr-icon-btn active" title="Inicio">
+                        <i class="bi bi-house-fill"></i>
+                    </button>
+                    <button class="sr-icon-btn" title="Agregar receta">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                    <button class="sr-icon-btn" title="Buscar receta">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <button class="sr-icon-btn" title="Favoritos">
+                        <i class="bi bi-clock-history"></i>
+                    </button>
+                </nav>
+    
+                <!-- Salir sesión abajo -->
+                <div class="sr-sidebar-bottom">
+                    <button class="sr-icon-btn" title="Salir de la sesión">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </button>
+                </div>
+            </aside>
+    
+            <!-- CONTENIDO PRINCIPAL -->
+            <main class="sr-main">
+    
+                <!-- TOPBAR -->
+                <header class="sr-topbar">
+                    <!-- Nombre del proyecto -->
+                    <div class="sr-brand">
+                        <span class="sr-brand-title">Sabor en Red</span>
+                    </div>
+    
+                    <!-- Menú central -->
+                    <nav class="sr-top-nav">
+                        <span class="sr-top-link sr-top-link-active">Inicio</span>
+                        <span class="sr-top-link">Agregar Receta</span>
+                        <span class="sr-top-link">Buscar Receta</span>
+                        <span class="sr-top-link">Favoritos</span>
+                    </nav>
+    
+                    <!-- Nombre de usuario + icono -->
+                    <div class="sr-user-area">
+                        <div class="sr-user-pill">
+                            {{ ' {{ SessionService.getUsr() }} ' }}
+                        </div>
+                        <div class="sr-user-icon">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                    </div>
+                </header>
+    
+                <!-- GRID DE RECETAS -->
+                <section class="sr-grid">
+                    <!-- usamos recetasFiltradas si existe, si no, recetasLista -->
+                    <div class="sr-card"
+                         ng-repeat="receta in (recetasFiltradas.length ? recetasFiltradas : recetasLista)">
+                        <div class="sr-card-img-wrapper">
+                            <img ng-src="{{ receta.Imagen || defaultRecetaImg }}"
+                                 alt="{{ receta.Nombre }}">
+                            <!-- overlay para favoritos / ver receta -->
+                            <div class="sr-card-overlay">
+                                <button class="sr-circle-btn" title="Agregar a favoritos">
+                                    <i class="bi bi-heart-fill"></i>
+                                </button>
+                                <button class="sr-circle-btn" title="Ver receta"
+                                        ng-click="verReceta(receta)">
+                                    <i class="bi bi-play-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Mensaje si no hay recetas -->
+                    <div class="text-muted text-center w-100 py-4"
+                         ng-if="!(recetasFiltradas.length ? recetasFiltradas : recetasLista).length">
+                        No hay recetas para mostrar.
+                    </div>
+                </section>
+    
+            </main>
+    
         </div>
-        
-        <h5>{{ "{{ categoriaDesayunos.titulo }}" }}</h5>
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
-             ng-repeat="receta in categoriaDesayunos.recetas">
-            <div class="card-header">Receta</div>
-            <div class="card-body">
-                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
-            </div>
-        </div>
-
-        <!-- BUSCADOR + TABLA SOLO LECTURA -->
-        <div class="mb-3 input-group">
-            <input type="text" class="form-control" id="txtBuscarReceta"
-                   placeholder="Buscar receta" ng-model="busqueda">
-            <button class="btn btn-secondary" id="btnBuscarReceta" type="button">Buscar</button>
-        </div>
-        
-        <div class="table-responsive">
-            <table class="table table-sm">
-                <thead class="table-active">
-                    <tr>
-                        <th>Id</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Ingredientes</th>
-                        <th>Utensilios</th>
-                        <th>Instrucciones</th>
-                        <th>Nutrientes</th>
-                        <th>Categoría</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="recetasTbody"></tbody>
-            </table>
-        </div>
-
     </section>
 
 </div>
+
