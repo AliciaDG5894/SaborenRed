@@ -14,6 +14,8 @@ import pusher
 import pytz
 import datetime
 import traceback
+import os
+from werkzeug.utils import secure_filename
 
 app            = Flask(__name__)
 app.secret_key = "Test12345"
@@ -181,12 +183,9 @@ def logRecetas():
     ahora        = datetime.datetime.now(tz)
     fechaHoraStr = ahora.strftime("%Y-%m-%d %H:%M:%S")
 
-    # Si vienen actividad y descripcion, escribe en el log
     if actividad and descripcion:
         with open("log-busquedas.txt", "a", encoding="utf-8") as f:
             f.write(f"{actividad}\t{descripcion}\t{fechaHoraStr}\n")
-
-    # Siempre intenta leer el log (aunque no haya nada nuevo que escribir)
     try:
         with open("log-busquedas.txt", encoding="utf-8") as f:
             log = f.read()
@@ -217,7 +216,8 @@ def recetasTbody():
         Utensilios,
         Instrucciones,
         Nutrientes,
-        Categorias
+        Categorias,
+        Imagen
 
     FROM Recetas
 
@@ -246,8 +246,20 @@ def guardarReceta():
     Instrucciones    = request.form.get("Instrucciones")
     Nutrientes       = request.form.get("Nutrientes")
     Categorias       = request.form.get("Categorias")
-
+    file             = request.files.get("fileImagen")
     # fechahora   = datetime.datetime.now(pytz.timezone("America/Matamoros"))
+
+    if file and file.filename:
+    filename = secure_filename(file.filename)
+
+    uploads_dir = os.path.join(app.root_path, "static", "uploads")
+    os.makedirs(uploads_dir, exist_ok=True)
+
+    file_path = os.path.join(uploads_dir, filename)
+    file.save(file_path)
+
+    # Ruta que se guardará en la BD (para usar directo en <img src="...">)
+    Imagen = f"static/uploads/{filename}"
     
     cursor = con.cursor()
 
@@ -261,17 +273,19 @@ def guardarReceta():
         Utensilios          = %s,
         Instrucciones       = %s,
         Nutrientes          = %s,
-        Categorias          = %s
+        Categorias          = %s,
+        Imagen              = %s
+        
 
         WHERE IdReceta = %s
         """
-        val = (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, IdReceta)
+        val = (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen, IdReceta)
     else:
         sql = """
-        INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
-                    VALUES (   %s,       %s,        %s,          %s,          %s,           %s,          %s,         %s)
+        INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen)
+                    VALUES (   %s,       %s,        %s,          %s,          %s,           %s,          %s,         %s,       %s)
         """
-        val =               (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias)
+        val =               (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen)
     
     cursor.execute(sql, val)
     con.commit()
@@ -317,7 +331,7 @@ def eliminarReceta():
 
 #     cursor = con.cursor(dictionary=True)
 #     sql    = """
-#     SELECT IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias
+#     SELECT IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen
 
 #     FROM Recetas
 
@@ -431,7 +445,7 @@ def obtener_recetas_favoritos(Id_Usuario):
     try:
         sql = """
         SELECT r.IdReceta, r.Nombre, r.Descripcion, r.Ingredientes, r.Utensilios,
-               r.Instrucciones, r.Nutrientes, r.Categorias,
+               r.Instrucciones, r.Nutrientes, r.Categorias, r.Imagen,
                f.IdFavorito, f.Comentario, f.Calificacion, f.Fecha
         FROM Recetas r
         LEFT JOIN Favoritos f
@@ -448,6 +462,7 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
