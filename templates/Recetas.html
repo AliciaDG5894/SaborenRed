@@ -227,11 +227,12 @@
                 <!-- GRID DE RECETAS -->
                 <section class="sr-grid">
                     <!-- usamos recetasFiltradas si existe, si no, recetasLista -->
-                    <div class="sr-card"
-                         ng-repeat="receta in (recetasFiltradas.length ? recetasFiltradas : recetasLista)">
+                    <div class="sr-card" ng-repeat="receta in (recetasFiltradas.length ? recetasFiltradas : recetasLista)">
                         <div class="sr-card-img-wrapper">
+                            {% raw %}
                             <img ng-src="{{ receta.Imagen || defaultRecetaImg }}"
                                  alt="{{ receta.Nombre }}">
+                            {% endraw %}
                             <!-- overlay para favoritos / ver receta -->
                             <div class="sr-card-overlay">
                                 <button class="sr-circle-btn" title="Agregar a favoritos">
@@ -243,7 +244,8 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                     </div>
+
     
                     <!-- Mensaje si no hay recetas -->
                     <div class="text-muted text-center w-100 py-4"
@@ -258,5 +260,6 @@
     </section>
 
 </div>
+
 
 
