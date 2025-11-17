@@ -190,6 +190,42 @@
             </div>
         </div>
 
+        <h5>{{ "{{ categoriaComidas.titulo }}" }}</h5>
+        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
+             ng-repeat="receta in categoriaComidas.recetas">
+            <div class="card-header">Receta</div>
+            <div class="card-body">
+                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
+            </div>
+        </div>
+                
+        <h5>{{ "{{ categoriaCenas.titulo }}" }}</h5>
+        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
+             ng-repeat="receta in categoriaCenas.recetas">
+            <div class="card-header">Receta</div>
+            <div class="card-body">
+                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
+            </div>
+        </div>
+
+        <h5>{{ "{{ categoriaPostres.titulo }}" }}</h5>
+        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
+             ng-repeat="receta in categoriaPostres.recetas">
+            <div class="card-header">Receta</div>
+            <div class="card-body">
+                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
+            </div>
+        </div>
+
+        <h5>{{ "{{ categoriaSaludable.titulo }}" }}</h5>
+        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
+             ng-repeat="receta in categoriaSaludable.recetas">
+            <div class="card-header">Receta</div>
+            <div class="card-body">
+                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
+            </div>
+        </div>
+        
         <!-- BUSCADOR + TABLA SOLO LECTURA -->
         <div class="mb-3 input-group">
             <input type="text" class="form-control" id="txtBuscarReceta"
@@ -220,4 +256,5 @@
     </section>
 
 </div>
+
 
