@@ -22,7 +22,7 @@
     <section ng-if="SessionService.getTipo() == 1">
 
         <!-- FORMULARIO -->
-        <form id="frmRecetas" method="post" ng-submit="crearReceta()">
+        <form id="frmRecetas" method="post" ng-submit="crearReceta()"  enctype="multipart/form-data">
             <input type="hidden" id="idReceta" name="idReceta">
         
             <div class="mb-1">
@@ -61,6 +61,10 @@
                     <option value="Saludable">Saludable</option>
                 </select>
             </div>
+            <div class="mb-1">
+                <label for="fileImagen" class="form-label">Imagen</label>
+                <input type="file" class="form-control" id="fileImagen" name="fileImagen" accept="image/*">
+            </div>
     
             <div class="mb-1 text-end">
                 <button class="btn btn-primary">Guardar</button>
@@ -76,6 +80,13 @@
           <div class="card-body">
             <h3 class="card-title mb-1">{{ nuevaReceta.Nombre }}</h3>
             <p class="text-muted mb-3">{{ nuevaReceta.Descripcion }}</p>
+
+            <div class="text-center mb-3" ng-if="nuevaReceta.Imagen">
+              <img ng-src="{{ nuevaReceta.Imagen }}"
+                   alt="{{ nuevaReceta.Nombre }}"
+                   class="img-fluid rounded"
+                   style="max-height: 200px; object-fit: cover;">
+            </div>
         
             <div class="row">
               <div class="col-md-6">
@@ -145,7 +156,8 @@
                         <th>Instrucciones</th>
                         <th>Nutrientes</th>
                         <th>Categoría</th>
-                        <th></th>
+                        <th>Imagen</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="recetasTbody"></tbody>
@@ -197,7 +209,8 @@
                         <th>Instrucciones</th>
                         <th>Nutrientes</th>
                         <th>Categoría</th>
-                        <th></th>
+                        <th>Imagen</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="recetasTbody"></tbody>
@@ -207,3 +220,4 @@
     </section>
 
 </div>
+
