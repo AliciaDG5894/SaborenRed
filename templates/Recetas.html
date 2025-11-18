@@ -150,93 +150,85 @@
     <!-- =======================================================
          VISTA USUARIO NORMAL (Tipo_Usuario != 1) - solo lectura
          ======================================================= -->
-    <section ng-if="SessionService.getTipo() != 1">
-
-        <!-- Puedes mostrar también categorías del Factory si quieres -->
-        <h5>{{ "{{ categoriaRapida.titulo }}" }}</h5>
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
-             ng-repeat="receta in categoriaRapida.recetas">
-            <div class="card-header">Receta</div>
-            <div class="card-body">
-                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
-            </div>
+    <section ng-if="SessionService.getTipo() != 1" ng-init="cargarRecetasUsuario()">
+    
+        <div class="row">
+            <!-- SIDEBAR IZQUIERDA (iconos) -->
+            <aside class="col-1 d-flex flex-column align-items-center py-3">
+                <!-- Aquí solo esqueleto, luego le damos estilos bonitos -->
+                <button class="btn btn-link mb-3">🏠</button>
+                <button class="btn btn-link mb-3">＋</button>
+                <button class="btn btn-link mb-3">🔍</button>
+                <button class="btn btn-link mb-3">🕒</button>
+                <button class="btn btn-link mt-auto">⤴</button>
+            </aside>
+    
+            <!-- CONTENIDO PRINCIPAL -->
+            <main class="col-11">
+    
+                <!-- HEADER SUPERIOR -->
+                <div class="d-flex justify-content-between align-items-center my-3">
+                    <h2 class="mb-0">Sabor en Red</h2>
+    
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="px-4 py-2 border rounded-pill">
+                            {{ nombreUsuario }}
+                        </span>
+                        <div class="rounded-circle border d-flex align-items-center justify-content-center"
+                             style="width: 40px; height: 40px;">
+                            <!-- icono usuario -->
+                            <span>👤</span>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- GRID DE RECETAS (Muro de imágenes) -->
+                <div class="row" id="muroRecetas">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3"
+                         ng-repeat="r in recetasUsuario">
+    
+                        <article class="card h-100 border-0">
+                            <div class="position-relative">
+                                <!-- Imagen de la receta -->
+                                <img ng-src="{{ r.Imagen }}"
+                                     alt="{{ r.Nombre }}"
+                                     class="img-fluid rounded"
+                                     style="width: 100%; height: 220px; object-fit: cover;">
+    
+                                <!-- Botón favorito (corazón) -->
+                                <button type="button"
+                                        class="btn btn-light btn-sm position-absolute"
+                                        style="top: 10px; right: 10px;"
+                                        ng-click="toggleFavorito(r)">
+                                    🤍
+                                </button>
+    
+                                <!-- Botón ver detalle (play/flecha) -->
+                                <button type="button"
+                                        class="btn btn-light btn-sm position-absolute"
+                                        style="bottom: 10px; right: 10px;"
+                                        ng-click="verReceta(r)">
+                                    ▶
+                                </button>
+                            </div>
+    
+                            <!-- Nombre debajo de la foto -->
+                            <div class="mt-2">
+                                <h6 class="mb-0">{{ r.Nombre }}</h6>
+                                <!-- Si quieres, aquí puedes agregar categoría, etc. -->
+                            </div>
+                        </article>
+                    </div>
+                </div>
+    
+            </main>
         </div>
-        
-        <h5>{{ "{{ categoriaDesayunos.titulo }}" }}</h5>
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
-             ng-repeat="receta in categoriaDesayunos.recetas">
-            <div class="card-header">Receta</div>
-            <div class="card-body">
-                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
-            </div>
-        </div>
-
-        <h5>{{ "{{ categoriaComidas.titulo }}" }}</h5>
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
-             ng-repeat="receta in categoriaComidas.recetas">
-            <div class="card-header">Receta</div>
-            <div class="card-body">
-                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
-            </div>
-        </div>
-                
-        <h5>{{ "{{ categoriaCenas.titulo }}" }}</h5>
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
-             ng-repeat="receta in categoriaCenas.recetas">
-            <div class="card-header">Receta</div>
-            <div class="card-body">
-                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
-            </div>
-        </div>
-
-        <h5>{{ "{{ categoriaPostres.titulo }}" }}</h5>
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
-             ng-repeat="receta in categoriaPostres.recetas">
-            <div class="card-header">Receta</div>
-            <div class="card-body">
-                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
-            </div>
-        </div>
-
-        <h5>{{ "{{ categoriaSaludable.titulo }}" }}</h5>
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
-             ng-repeat="receta in categoriaSaludable.recetas">
-            <div class="card-header">Receta</div>
-            <div class="card-body">
-                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
-            </div>
-        </div>
-        
-        <!-- BUSCADOR + TABLA SOLO LECTURA -->
-        <div class="mb-3 input-group">
-            <input type="text" class="form-control" id="txtBuscarReceta"
-                   placeholder="Buscar receta" ng-model="busqueda">
-            <button class="btn btn-secondary" id="btnBuscarReceta" type="button">Buscar</button>
-        </div>
-        
-        <div class="table-responsive">
-            <table class="table table-sm">
-                <thead class="table-active">
-                    <tr>
-                        <th>Id</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Ingredientes</th>
-                        <th>Utensilios</th>
-                        <th>Instrucciones</th>
-                        <th>Nutrientes</th>
-                        <th>Categoría</th>
-                        <th>Imagen</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="recetasTbody"></tbody>
-            </table>
-        </div>
-
+    
     </section>
 
+
 </div>
+
 
 
 
