@@ -766,33 +766,50 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
 
 // BUILDER
-    $scope.crearReceta = function() {
-        $scope.nuevaReceta = RecetaBuilder.reset()
-            .setNombre($scope.nombre)
-            .setDescripcion($scope.descripcion)
-            .setIngredientes($scope.ingredientes)
-            .setUtensilios($scope.utensilios)
-            .setInstrucciones($scope.instrucciones)
-            .setNutrientes($scope.nutrientes)
-            .setCategorias($scope.categorias)
-            .setImagen($scope.imagen)
-            .build();
-
-        console.log("Receta construida con Builder:", $scope.nuevaReceta);
-
-        var formData = new FormData();
-
-        formData.append("IdReceta", $("#idReceta").val());
-        formData.append("Nombre", $("#txtNombre").val());
-        formData.append("Descripcion", $("#txtDescripcion").val());
-        formData.append("Ingredientes", $("#txtIngredientes").val());
-        formData.append("Utensilios", $("#txtUtensilios").val());
-        formData.append("Instrucciones", $("#txtInstrucciones").val());
-        formData.append("Nutrientes", $("#txtNutrientes").val());
-        formData.append("Categorias", $("#txtCategoria").val());
-        formData.append("Imagen", $("#txtImagen").val()); // texto opcional
-
+   $scope.crearReceta = function() {
+        // TOMAR LOS DATOS DIRECTO DE LOS INPUTS (que ya estás usando)
+        var nombre        = $("#txtNombre").val();
+        var descripcion   = $("#txtDescripcion").val();
+        var ingredientes  = $("#txtIngredientes").val();
+        var utensilios    = $("#txtUtensilios").val();
+        var instrucciones = $("#txtInstrucciones").val();
+        var nutrientes    = $("#txtNutrientes").val();
+        var categorias    = $("#txtCategoria").val();
+    
+        // Para la imagen en el preview (opcional)
         var fileInput = document.getElementById("fileImagen");
+        var imagenPreview = null;
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+            imagenPreview = "static/uploads/" + fileInput.files[0].name;
+        }
+    
+        // BUILDER usando esos valores
+        $scope.nuevaReceta = RecetaBuilder.reset()
+            .setNombre(nombre)
+            .setDescripcion(descripcion)
+            .setIngredientes(ingredientes)
+            .setUtensilios(utensilios)
+            .setInstrucciones(instrucciones)
+            .setNutrientes(nutrientes)
+            .setCategorias(categorias)
+            .setImagen(imagenPreview)   // solo para mostrar en la vista previa
+            .build();
+    
+        console.log("Receta construida con Builder:", $scope.nuevaReceta);
+    
+        // --- LO QUE YA TENÍAS PARA GUARDAR (lo puedes dejar igual) ---
+        var formData = new FormData();
+        formData.append("IdReceta", $("#idReceta").val());
+        formData.append("Nombre", nombre);
+        formData.append("Descripcion", descripcion);
+        formData.append("Ingredientes", ingredientes);
+        formData.append("Utensilios", utensilios);
+        formData.append("Instrucciones", instrucciones);
+        formData.append("Nutrientes", nutrientes);
+        formData.append("Categorias", categorias);
+        // Si luego quieres manejar un campo de texto Imagen, aquí iría:
+        // formData.append("Imagen", $("#txtImagen").val());
+    
         if (fileInput && fileInput.files && fileInput.files[0]) {
             formData.append("fileImagen", fileInput.files[0]);
         }
@@ -801,8 +818,8 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
             url: "/recetas",
             type: "POST",
             data: formData,
-            processData: false,   // no convertir a querystring
-            contentType: false,   // dejar que el navegador ponga el boundary del multipart
+            processData: false,
+            contentType: false,
             success: function(response) {
                 MensajesService.modal("Has guardado una receta.");
                 $("#frmRecetas")[0].reset();
@@ -810,16 +827,17 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
     
                 $scope.$apply(function () {
                     $scope.nuevaReceta = null;
-                    $scope.imagen = null;
                 });
     
-                buscarRecetas(); 
+                buscarRecetas();
             },
             error: function(xhr) {
                 console.error("Error al guardar/actualizar receta:", xhr.responseText);
                 MensajesService.modal("Ocurrió un error al guardar la receta.");
             }
         });
+    };
+
         
         // $.post("/recetas", {
         //     IdReceta: $("#idReceta").val(),
@@ -838,7 +856,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         // }).fail(function(xhr){
         //     console.error("Error al guardar/actualizar receta:", xhr.responseText);
         // });
-    };
+        // };
 
 // FACADE
     $(document).on("click", ".btn-facade", function () {
@@ -935,6 +953,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
