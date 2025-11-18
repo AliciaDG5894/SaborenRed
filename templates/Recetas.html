@@ -117,25 +117,6 @@
           </div>
         </div>
         {% endraw %}
-
-        <!-- FACTORY: CATEGORÍAS RAPIDA / DESAYUNOS -->
-        <h5 class="mt-4">{{ "{{ categoriaRapida.titulo }}" }}</h5>
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
-             ng-repeat="receta in categoriaRapida.recetas">
-            <div class="card-header">Receta</div>
-            <div class="card-body">
-                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
-            </div>
-        </div>
-        
-        <h5>{{ "{{ categoriaDesayunos.titulo }}" }}</h5>
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;"
-             ng-repeat="receta in categoriaDesayunos.recetas">
-            <div class="card-header">Receta</div>
-            <div class="card-body">
-                <h3 class="card-title">{{ "{{ receta.Nombre }}" }}</h3>
-            </div>
-        </div>
         
         <!-- BUSCADOR + TABLA ADMIN -->
         <div class="mb-3 input-group">
@@ -256,5 +237,6 @@
     </section>
 
 </div>
+
 
 
