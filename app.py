@@ -91,9 +91,10 @@ def admin(fun):
                 "respuesta": "No tienes permisos para esta acción"
             }), 403
 
-                return fun(*args, **kwargs)
-            return decorador
+        # si pasó las validaciones, deja pasar a la vista original
+        return fun(*args, **kwargs)
 
+    return decorador
 
 def get_connection():
     """Garantiza una conexión activa a la base de datos.
@@ -696,18 +697,16 @@ def buscarCategorias():
     """
     val    = (categoria,)
 
-   try:
+    try:
         cursor.execute(sql, val)
         registros = cursor.fetchall()
-
-
     except mysql.connector.errors.ProgrammingError as error:
         print(f"Ocurrió un error de programación en MySQL: {error}")
         registros = []
-
     finally:
         cursor.close()
-        con.close()
+        if con and con.is_connected():
+            con.close()
 
     return make_response(jsonify(registros))
 
@@ -744,6 +743,7 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
