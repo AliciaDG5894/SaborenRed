@@ -195,10 +195,115 @@ def logRecetas():
     return log
 
 
-@app.route("/recetas")
+# @app.route("/recetas")
+# @login
+# def recetas():
+#     return render_template("Recetas.html")
+
+@app.route("/recetas", methods=["GET", "POST"])
 @login
 def recetas():
-    return render_template("Recetas.html")
+    # Si es GET, solo devolver la vista HTML (para Angular)
+    if request.method == "GET":
+        return render_template("Recetas.html")
+
+    # Si es POST, guardar/actualizar la receta
+    if not con.is_connected():
+        con.reconnect()
+
+    IdReceta      = request.form.get("IdReceta")
+    Nombre        = request.form.get("Nombre")
+    Descripcion   = request.form.get("Descripcion")
+    Ingredientes  = request.form.get("Ingredientes")
+    Utensilios    = request.form.get("Utensilios")
+    Instrucciones = request.form.get("Instrucciones")
+    Nutrientes    = request.form.get("Nutrientes")
+    Categorias    = request.form.get("Categorias")
+
+    # Texto opcional (por si algún día usas un input de texto Imagen)
+    Imagen_form = request.form.get("Imagen")
+
+    # Archivo subido desde el input type="file" name="fileImagen"
+    file = request.files.get("fileImagen")
+
+    # Valor por defecto de Imagen
+    Imagen = Imagen_form  # puede ser None si no envías nada
+
+    # Si viene archivo, lo guardamos y usamos esa ruta
+    if file and file.filename:
+        filename = secure_filename(file.filename)
+
+        uploads_dir = os.path.join(app.root_path, "static", "uploads")
+        os.makedirs(uploads_dir, exist_ok=True)
+
+        file_path = os.path.join(uploads_dir, filename)
+        file.save(file_path)
+
+        # Ruta que se guardará en la BD (para usar directo en <img src="...">)
+        Imagen = f"static/uploads/{filename}"
+    
+    cursor = con.cursor()
+
+    if IdReceta:
+        sql = """
+        UPDATE Recetas
+        SET Nombre        = %s,
+            Descripcion   = %s,
+            Ingredientes  = %s,
+            Utensilios    = %s,
+            Instrucciones = %s,
+            Nutrientes    = %s,
+            Categorias    = %s,
+            Imagen        = %s
+        WHERE IdReceta = %s
+        """
+        val = (
+            Nombre,
+            Descripcion,
+            Ingredientes,
+            Utensilios,
+            Instrucciones,
+            Nutrientes,
+            Categorias,
+            Imagen,
+            IdReceta
+        )
+    else:
+        sql = """
+        INSERT INTO Recetas (
+            IdReceta,
+            Nombre,
+            Descripcion,
+            Ingredientes,
+            Utensilios,
+            Instrucciones,
+            Nutrientes,
+            Categorias,
+            Imagen
+        ) VALUES (
+            %s,%s,%s,%s,%s,%s,%s,%s,%s
+        )
+        """
+        val = (
+            IdReceta,
+            Nombre,
+            Descripcion,
+            Ingredientes,
+            Utensilios,
+            Instrucciones,
+            Nutrientes,
+            Categorias,
+            Imagen
+        )
+    
+    cursor.execute(sql, val)
+    con.commit()
+    con.close()
+
+    pusherRecetas()
+    
+    return make_response(jsonify({}))
+
 
 @app.route("/recetasTbody")
 @login
@@ -232,70 +337,70 @@ def recetasTbody():
     return render_template("RecetasTbody.html", recetas=registros)
 
 # GUARDAR
-@app.route("/recetas", methods=["GET", "POST"])
-@login
-def guardarReceta():
-    if not con.is_connected():
-        con.reconnect()
+# @app.route("/recetas", methods=["GET", "POST"])
+# @login
+# def guardarReceta():
+#     if not con.is_connected():
+#         con.reconnect()
 
-    IdReceta         = request.form.get("IdReceta")
-    Nombre           = request.form.get("Nombre")
-    Descripcion      = request.form.get("Descripcion")
-    Ingredientes     = request.form.get("Ingredientes")
-    Utensilios       = request.form.get("Utensilios")
-    Instrucciones    = request.form.get("Instrucciones")
-    Nutrientes       = request.form.get("Nutrientes")
-    Categorias       = request.form.get("Categorias")
-    file             = request.files.get("fileImagen")
-    Imagen_form = request.form.get("Imagen")
+#     IdReceta         = request.form.get("IdReceta")
+#     Nombre           = request.form.get("Nombre")
+#     Descripcion      = request.form.get("Descripcion")
+#     Ingredientes     = request.form.get("Ingredientes")
+#     Utensilios       = request.form.get("Utensilios")
+#     Instrucciones    = request.form.get("Instrucciones")
+#     Nutrientes       = request.form.get("Nutrientes")
+#     Categorias       = request.form.get("Categorias")
+#     file             = request.files.get("fileImagen")
+#     Imagen_form = request.form.get("Imagen")
 
-    file = request.files.get("fileImagen")
+#     file = request.files.get("fileImagen")
 
-    Imagen = Imagen_form
-    if file and file.filename:
-        filename = secure_filename(file.filename)
+#     Imagen = Imagen_form
+#     if file and file.filename:
+#         filename = secure_filename(file.filename)
 
-        uploads_dir = os.path.join(app.root_path, "static", "uploads")
-        os.makedirs(uploads_dir, exist_ok=True)
+#         uploads_dir = os.path.join(app.root_path, "static", "uploads")
+#         os.makedirs(uploads_dir, exist_ok=True)
 
-        file_path = os.path.join(uploads_dir, filename)
-        file.save(file_path)
+#         file_path = os.path.join(uploads_dir, filename)
+#         file.save(file_path)
 
-        Imagen = f"static/uploads/{filename}"
+#         Imagen = f"static/uploads/{filename}"
     
-    cursor = con.cursor()
+#     cursor = con.cursor()
 
-    if IdReceta:
-        sql = """
-        UPDATE Recetas
+#     if IdReceta:
+#         sql = """
+#         UPDATE Recetas
 
-        SET Nombre          = %s,
-        Descripcion         = %s,
-        Ingredientes        = %s,
-        Utensilios          = %s,
-        Instrucciones       = %s,
-        Nutrientes          = %s,
-        Categorias          = %s,
-        Imagen              = %s
+#         SET Nombre          = %s,
+#         Descripcion         = %s,
+#         Ingredientes        = %s,
+#         Utensilios          = %s,
+#         Instrucciones       = %s,
+#         Nutrientes          = %s,
+#         Categorias          = %s,
+#         Imagen              = %s
         
 
-        WHERE IdReceta = %s
-        """
-        val = (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen, IdReceta)
-    else:
-        sql = """
-        INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen)
-                    VALUES (   %s,       %s,        %s,          %s,          %s,           %s,          %s,         %s,       %s)
-        """
-        val =               (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen)
+#         WHERE IdReceta = %s
+#         """
+#         val = (Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen, IdReceta)
+#     else:
+#         sql = """
+#         INSERT INTO Recetas (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen)
+#                     VALUES (   %s,       %s,        %s,          %s,          %s,           %s,          %s,         %s,       %s)
+#         """
+#         val =               (IdReceta, Nombre, Descripcion, Ingredientes, Utensilios, Instrucciones, Nutrientes, Categorias, Imagen)
     
-    cursor.execute(sql, val)
-    con.commit()
-    con.close()
+#     cursor.execute(sql, val)
+#     con.commit()
+#     con.close()
 
-    pusherRecetas()
+#     pusherRecetas()
     
-    return make_response(jsonify({}))
+#     return make_response(jsonify({}))
 
 
 # ELIMINAR
@@ -464,6 +569,7 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
