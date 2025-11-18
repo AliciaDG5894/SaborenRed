@@ -852,13 +852,13 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
         if (fileInput && fileInput.files && fileInput.files[0]) {
             formData.append("fileImagen", fileInput.files[0]);
         }
-    
+       
         $.ajax({
-            url: "/recetas",
-            type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
+                url: "/recetas/guardar",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
             success: function(response) {
                 MensajesService.modal("Has guardado una receta.");
                 $("#frmRecetas")[0].reset();
@@ -992,14 +992,4 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
-
-
-
-
-
-
-
-
-
-
 
