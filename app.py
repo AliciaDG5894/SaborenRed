@@ -274,7 +274,7 @@ def guardarReceta():
         file.save(file_path)
 
         # Ruta que se guardará en la BD (para usar directo en <img src="...">)
-        Imagen = f"static/uploads/{filename}"
+        Imagen = f"/static/uploads/{filename}"
     
     cursor = con.cursor()
 
@@ -743,6 +743,7 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
