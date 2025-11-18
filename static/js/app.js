@@ -727,6 +727,45 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 
     const Id_Usuario = SessionService.getId() || localStorage.getItem("Id_Usuario");
 
+// MURO
+    $scope.recetasUsuario = [];
+    $scope.nombreUsuario  = "";
+
+    $scope.cargarRecetasUsuario = function () {
+        if (!Id_Usuario) {
+            console.warn("No hay Id_Usuario en sesión para cargar recetas de usuario.");
+            return;
+        }
+
+        // Llenar nombre para el header de la vista usuario
+        if (SessionService.getUsr) {
+            $scope.nombreUsuario = SessionService.getUsr();
+        } else {
+            $scope.nombreUsuario = "Usuario";
+        }
+
+        // Traer recetas con imagen para el muro
+        $http.get("/recetas/" + Id_Usuario)
+            .then(function (response) {
+                $scope.recetasUsuario = response.data || [];
+                console.log("Recetas usuario (muro):", $scope.recetasUsuario);
+            })
+            .catch(function (error) {
+                console.error("Error al cargar recetas de usuario:", error);
+            });
+    };
+
+    // Esqueleto de acciones en las cards (luego las llenas bien)
+    $scope.toggleFavorito = function (receta) {
+        console.log("Click favorito en receta", receta.IdReceta);
+        // aquí después harás POST/DELETE a /favoritos
+    };
+
+    $scope.verReceta = function (receta) {
+        console.log("Ver receta en muro:", receta.IdReceta);
+        // aquí después puedes abrir modal, navegar a detalle, etc.
+    };
+
 // FACTORY
     $.get("recetas/categorias", { categoria: "Rapida" }, function (rapida) {
         const categoriaRapida = CategoriaFactory.create("Rapida", rapida);
@@ -953,6 +992,7 @@ app.controller("recetasCtrl", function ($scope, $http, SessionService, Categoria
 document.addEventListener("DOMContentLoaded", function (event) {
     activeMenuOption(location.hash)
 })
+
 
 
 
