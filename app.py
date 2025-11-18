@@ -77,9 +77,9 @@ def login(fun):
 # preferencias admin
 def admin(fun):␊
     @wraps(fun)␊
-    def decorador(*args, **kwargs):␊
-        if not session.get("login"):␊
-            return jsonify({␊
+    def decorador(*args, **kwargs):
+        if not session.get("login"):
+            return jsonify({
                 "estado": "error",
                 "respuesta": "No has iniciado sesión"
             }), 401
@@ -629,11 +629,11 @@ def buscarReceta():
     busqueda = f"%{busqueda}%"
     
 # EN WHERE BUSQUEDA PUSE SOLO TRES POR EL "VAL" NO SE SI SE LIMITE (si se limita)
-    cursor = con.cursor(dictionary=True)␊
-    sql    = """␊
-    SELECT  IdReceta,␊
-            Nombre,␊
-            Descripcion,␊
+    cursor = con.cursor(dictionary=True)
+    sql    = """
+    SELECT  IdReceta,
+            Nombre,
+            Descripcion,
             Ingredientes,
             Utensilios,
             Instrucciones,
@@ -744,6 +744,7 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
