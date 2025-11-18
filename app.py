@@ -75,8 +75,8 @@ def login(fun):
     return decorador
 
 # preferencias admin
-def admin(fun):␊
-    @wraps(fun)␊
+def admin(fun):
+    @wraps(fun)
     def decorador(*args, **kwargs):
         if not session.get("login"):
             return jsonify({
@@ -744,6 +744,7 @@ def obtener_recetas_favoritos(Id_Usuario):
         # con.close()
 
     return make_response(jsonify(registros))
+
 
 
 
